@@ -1,7 +1,7 @@
 {
   "name": "@nodeguy/channel",
   "description": "a Channel type for Go-like concurrency",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "David Braun",
     "email": "David@NodeGuy.com",
