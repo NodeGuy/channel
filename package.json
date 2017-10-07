@@ -1,0 +1,48 @@
+{
+  "name": "@nodeguy/channel",
+  "description": "a Channel type for Go-like concurrency",
+  "version": "0.0.0",
+  "author": {
+    "name": "David Braun",
+    "email": "David@NodeGuy.com",
+    "url": "https://www.NodeGuy.com/"
+  },
+  "bugs": {
+    "url": "https://github.com/NodeGuy/channel/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@nodeguy/assert": "0.1.1",
+    "husky": "0.14.3",
+    "mocha": "3.5.3",
+    "standard": "10.0.3"
+  },
+  "homepage": "https://github.com/NodeGuy/channel",
+  "keywords": [
+    "CSP",
+    "channel",
+    "concurrency"
+  ],
+  "license": "Apache-2.0",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NodeGuy/channel.git"
+  },
+  "scripts": {
+    "precommit": "standard",
+    "pretest": "standard",
+    "test": "mocha --recursive"
+  },
+  "standard": {
+    "globals": [
+      "after",
+      "afterEach",
+      "before",
+      "beforeEach",
+      "describe",
+      "it",
+      "run"
+    ]
+  }
+}

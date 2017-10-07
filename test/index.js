@@ -1,0 +1,339 @@
+'use strict'
+
+const assert = require('@nodeguy/assert')
+const Channel = require('../lib')
+const stream = require('stream')
+
+const toArray = async (channel) => {
+  const array = []
+
+  await channel.forEach((item) => {
+    array.push(item)
+  })
+
+  return array
+}
+
+describe(`Channel`, function () {
+  it(`allows the use of new`, function () {
+    return new Channel()
+  })
+
+  it(`is frozen`, function () {
+    assert.throws(() => {
+      Channel.frozen = false
+    })
+  })
+
+  it(`creates a frozen object`, function () {
+    assert.throws(() => {
+      Channel().frozen = false
+    })
+  })
+
+  it(`creates a buffered channel`, async function () {
+    const channel = Channel(2)
+
+    ;(async () => {
+      assert.equal(await channel.shift(), 0)
+    })()
+
+    await channel.push(0, 1, 2)
+  })
+
+  describe(`from`, function () {
+    it(`iterable`, async function () {
+      assert.deepEqual(await toArray(Channel.from([0, 1, 2])), [0, 1, 2])
+    })
+
+    it(`Node.js's stream.readOnly`, async function () {
+      const readOnly = stream.PassThrough({objectMode: true})
+      readOnly.write(0)
+      readOnly.write(1)
+      readOnly.end(2)
+      assert.deepEqual(await toArray(Channel.from(readOnly)), [0, 1, 2])
+    })
+  })
+
+  it(`of`, async function () {
+    assert.deepEqual(await toArray(Channel.of(0, 1, 2)), [0, 1, 2])
+  })
+
+  describe(`select`, function () {
+    it(`miscellaneous`, async function () {
+      const a = Channel()
+      const b = Channel()
+
+      ;(async () => {
+        await b.push(0)
+        await a.push(1)
+        await a.shift()
+      })()
+
+      assert.equal(await Channel.select(a.shift(), b.shift()), b)
+      assert.equal(b.value, 0)
+      assert.equal(await a.shift(), 1)
+      assert.equal(await Channel.select(a.push(0), b.shift()), a)
+    })
+  })
+
+  it(`allows for non-blocking selects`, async function () {
+    const a = Channel()
+    const b = Channel()
+    const nonBlocking = Channel()
+    nonBlocking.close()
+
+    switch (await Channel.select(a.shift(), b.push(0), nonBlocking.shift())) {
+      case a:
+        assert(false)
+        break
+
+      case b:
+        assert(false)
+        break
+
+      default:
+        assert(true)
+        break
+    }
+  })
+})
+
+describe(`Channel object`, function () {
+  describe(`close`, function () {
+    it(`can't close an already closed channel`, function (done) {
+      const channel = Channel()
+      channel.close()
+
+      channel.close()
+        .then(() => {
+          done(new Error())
+        })
+        .catch((reason) => {
+          assert.deepEqual(
+            reason,
+            new Error(`Can't close an already-closed channel.`)
+          )
+
+          done()
+        })
+    })
+
+    it(`can't push to a closed channel`, async function () {
+      const channel = Channel()
+      channel.close()
+
+      return (async () => {
+        await channel.push(0)
+      })().then(() => {
+        assert(false)
+      }).catch((reason) => {
+        assert.deepEqual(reason, new Error(`Can't push to closed channel.`))
+      })
+    })
+
+    it(`returns 'undefined' immediately from shift`, async function () {
+      const channel = Channel()
+      channel.close()
+      assert.strictEqual(await channel.shift(), undefined)
+    })
+  })
+
+  it(`filter`, async function () {
+    assert.deepEqual(
+      await toArray(Channel.of(0, 1, 2, 3, 4, 5).filter(x => x % 2 !== 0)),
+      [1, 3, 5]
+    )
+  })
+
+  it(`forEach`, async function () {
+    const output = Channel()
+
+    ;(async () => {
+      await Channel.of(0, 1, 2).forEach(output.push)
+      output.close()
+    })()
+
+    assert.deepEqual(await toArray(output), [0, 1, 2])
+  })
+
+  it(`join`, async function () {
+    assert.equal(await Channel.of(`a`, `b`, `c`).join(), `a,b,c`)
+  })
+
+  it(`map`, async function () {
+    assert.deepEqual(
+      await toArray(Channel.of(`a`, `b`, `c`).map(x => x.toUpperCase())),
+      [`A`, `B`, `C`]
+    )
+  })
+
+  describe(`push`, function () {
+    it(`with shift`, async function () {
+      const channel = Channel()
+
+      ;(async () => {
+        await channel.push(0)
+      })()
+
+      assert.equal(await channel.shift(), 0)
+    })
+
+    describe(`undefined`, function () {
+      it(`outside select`, function () {
+        const channel = Channel()
+
+        return (async () => {
+          await channel.push(undefined)
+        })().then(() => {
+          assert(false)
+        }).catch((reason) => {
+          assert.deepEqual(
+            reason,
+            new TypeError(`Can't push 'undefined' to channel, use close instead.`)
+          )
+        })
+      })
+
+      it(`inside select`, function () {
+        const channel = Channel()
+
+        return (async () => {
+          await Channel.select(channel.push(undefined))
+        })().then(() => {
+          assert(false)
+        }).catch((reason) => {
+          assert.deepEqual(
+            reason,
+            new TypeError(`Can't push 'undefined' to channel, use close instead.`)
+          )
+        })
+      })
+    })
+
+    it(`returns a frozen promise`, function () {
+      assert.throws(() => {
+        Channel().push(0).frozen = false
+      })
+    })
+  })
+
+  it(`readOnly`, async function () {
+    const channel = Channel()
+    const readOnly = channel.readOnly()
+
+    assert.throws(() => {
+      readOnly.close()
+    })
+
+    assert.throws(() => {
+      readOnly.push(0)
+    })
+
+    assert.throws(() => {
+      readOnly.writeOnly()
+    })
+
+    ;(async () => {
+      await channel.push(1)
+    })()
+
+    assert.equal(readOnly.readOnly(), readOnly)
+    assert.equal(await readOnly.shift(), 1)
+    assert.equal(readOnly.value, 1)
+
+    assert.throws(() => {
+      readOnly.frozen = false
+    })
+  })
+
+  it(`reduce`, async function () {
+    assert.equal(await Channel.of(0, 1, 2)
+      .reduce((previous, current) => previous + current),
+      3
+    )
+
+    assert.equal(await Channel.of(0, 1, 2)
+      .reduce((previous, current) => previous + current, 10),
+      13
+    )
+  })
+
+  describe(`shift`, function () {
+    it(`with push`, async function () {
+      const channel = Channel()
+
+      ;(async () => {
+        await channel.push(0)
+      })()
+
+      assert.equal(await channel.shift(), 0)
+    })
+
+    it(`returns a frozen promise`, function () {
+      assert.throws(() => {
+        Channel().shift().frozen = false
+      })
+    })
+  })
+
+  describe(`slice`, function () {
+    it(`start`, async function () {
+      assert.deepEqual(await toArray(Channel.of(0, 1, 2).slice(1)), [1, 2])
+    })
+
+    it(`end`, async function () {
+      assert.deepEqual(
+        await toArray(Channel.of(0, 1, 2, 3, 4).slice(1, 4)),
+        [1, 2, 3]
+      )
+    })
+  })
+
+  it(`value`, async function () {
+    const channel = Channel()
+
+    ;(async () => {
+      await channel.push(0)
+    })()
+
+    await channel.shift()
+    assert.equal(channel.value, 0)
+
+    assert.throws(() => {
+      channel.value = 1
+    })
+
+    channel.close()
+    await channel.shift()
+    assert.equal(channel.value, undefined)
+  })
+
+  describe(`writeOnly`, function () {
+    it(`provides only write methods`, async function () {
+      const channel = Channel()
+      const writeOnly = channel.writeOnly()
+
+      assert.throws(() => {
+        writeOnly.readOnly()
+      })
+
+      assert.throws(() => {
+        writeOnly.shift()
+      })
+
+      assert.equal(writeOnly.value, undefined)
+
+      ;(async () => {
+        await channel.shift()
+      })()
+
+      await writeOnly.push(0)
+      writeOnly.close()
+
+      assert.throws(() => {
+        writeOnly.frozen = false
+      })
+    })
+  })
+})
