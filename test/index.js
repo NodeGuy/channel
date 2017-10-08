@@ -38,7 +38,9 @@ describe(`Channel`, function () {
       assert.equal(await channel.shift(), 0)
     })()
 
-    await channel.push(0, 1, 2)
+    await channel.push(0)
+    await channel.push(1)
+    await channel.push(2)
   })
 
   describe(`from`, function () {
@@ -188,10 +190,9 @@ describe(`Channel object`, function () {
         })().then(() => {
           assert(false)
         }).catch((reason) => {
-          assert.deepEqual(
-            reason,
-            new TypeError(`Can't push 'undefined' to channel, use close instead.`)
-          )
+          assert.deepEqual(reason, new TypeError(
+            `Can't push 'undefined' to channel, use close instead.`
+          ))
         })
       })
 
@@ -203,11 +204,23 @@ describe(`Channel object`, function () {
         })().then(() => {
           assert(false)
         }).catch((reason) => {
-          assert.deepEqual(
-            reason,
-            new TypeError(`Can't push 'undefined' to channel, use close instead.`)
-          )
+          assert.deepEqual(reason, new TypeError(
+            `Can't push 'undefined' to channel, use close instead.`
+          ))
         })
+      })
+    })
+
+    it(`disallows multiple values`, function () {
+      const channel = Channel()
+
+      return (async () => {
+        await channel.push(0, 1, 2)
+      })().then(() => {
+        assert(false)
+      }).catch((reason) => {
+        assert.deepEqual(reason, new Error(
+          `Can't push more than one value at a time.`))
       })
     })
 
