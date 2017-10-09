@@ -1,6 +1,6 @@
 {
   "name": "@nodeguy/channel",
-  "description": "a Channel type for Go-like concurrency",
+  "description": "Go-like channels for JavaScript",
   "version": "0.1.1",
   "author": {
     "name": "David Braun",

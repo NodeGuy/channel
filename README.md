@@ -1,12 +1,20 @@
 # Introduction
 
-This is an idiomatic, minimally-opinionated `Channel` type for JavaScript that's inspired by [Go](https://golang.org/)'s concurrency model.  It works in browsers and in Node.js.  If you know how to use `Array` then you already know most of how to use `Channel`.
+This is an idiomatic, minimally-opinionated `Channel` type for JavaScript that's
+inspired by [Go's channels](https://golang.org/ref/spec#Channel_types).  It
+works in browsers and in Node.js.  If you know how to use an `Array` then you
+already know most of how to use a `Channel`.
 
 ## Why
 
-Go's concurrency model is amazing and with JavaScript's async/await feature we have the basis for it as well.  All that's missing is a `Channel` type.  There are existing libraries that implement one but they're generally ports from other languages and don't feel like they were made for JavaScript.  I wanted an idiomatic `Channel` type that's simple and minimally-opinionated.
+Go's use of channels for concurrency is amazing and with JavaScript's
+async/await feature we have the basis for it as well.  All that's missing is a
+solid `Channel` type.  There are existing libraries but I wanted an idiomatic
+`Channel` type that's more simple and minimally-opinionated.
 
-This document assumes you're familiar with Go's concurrency model and why you'd want to use it.  For explanatory background, read my [blog article](https://www.NodeGuy.com/concurrency-in-javascript) on the subject.
+This document assumes you're familiar with Go's channels and why you'd want to
+use them.  For explanatory background, read my [blog
+article](https://www.nodeguy.com/channels-for-javascript/) on the subject.
 
 ## Requirements
 
@@ -22,11 +30,12 @@ $ npm install @nodeguy/channel
 
 Create a channel with `Channel()`.
 
-To send an value to a channel, use `push`.  To receive an value from a channel, use `shift`.  Always precede the method calls with `await`:
+To send an value to a channel, use `push`.  To receive an value from a channel,
+use `shift`.  Always precede the method calls with `await`:
 
 ```JavaScript
-const assert = require('assert')
-const Channel = require('@nodeguy/channel')
+const assert = require(`assert`)
+const Channel = require(`@nodeguy/channel`)
 
 const channel = Channel()
 
@@ -39,7 +48,9 @@ const channel = Channel()
 })()
 ```
 
-The `push` and `shift` methods are usually called in different async functions.  They represent the two different ends of the channel and act to coordinate the behavior of the async functions.
+The `push` and `shift` methods are usually called in different async functions.
+They represent the two different ends of the channel and act to synchronize the
+behavior of the async functions.
 
 # API
 
@@ -49,9 +60,11 @@ The following properties don't have equivalents in `Array`.
 
 ### close() -> async
 
-Closes the channel so that no more values can be pushed to it.  Returns a promise that resolves when any remaining pushes in flight complete.
+Closes the channel so that no more values can be pushed to it.  Returns a
+promise that resolves when any remaining pushes in flight complete.
 
-Attempting to push to a closed channel will throw an exception and shifting from a closed channel will immediately return `undefined`.
+Attempting to push to a closed channel will throw an exception and shifting from
+a closed channel will immediately return `undefined`.
 
 ### readOnly() -> Channel
 
@@ -59,7 +72,8 @@ Returns a version of the channel that provides only read methods.
 
 ### value
 
-Set to the most recently `shift`ed value.  This is useful when used in combination with `select`.
+Set to the most recently `shift`ed value.  This is useful when used in
+combination with `select`.
 
 ### writeOnly() -> Channel
 
@@ -67,7 +81,9 @@ Returns a version of the channel that provides only write methods.
 
 ### Channel.select(methods) -> async channel
 
-`Channel.select` attempts to call multiple channel `methods` in parallel and returns the channel of the first one that succeeds.  Only the winning method is executed to completion—the other methods have no effect.
+`Channel.select` attempts to call multiple channel `methods` in parallel and
+returns the channel of the first one that succeeds.  Only the winning method is
+executed to completion—the other methods have no effect.
 
 #### Examples
 
@@ -90,9 +106,10 @@ switch (await Channel.select(alice.shift(), bob.shift(), charlie.push(`Hi!`)) {
 }
 ```
 
-Be careful of unintended side effects, however.  Even though only one value is pushed in the following example, the counter is incremented twice.
+Be careful of unintended side effects, however.  Even though only one value is
+pushed in the following example, the counter is incremented twice.
 
-```
+```JavaScript
 let counter = 0
 
 const increment = () => {
@@ -104,7 +121,8 @@ await Channel.select(alice.push(increment()), bob.push(increment()))
 assert.equal(counter, 2)
 ```
 
-Sometimes you don't want to wait until a method completes.  You can use this pattern to return immediately even if no methods are ready:
+Sometimes you don't want to wait until a method completes.  You can use a closed
+channel to return immediately even if no methods are ready:
 
 ```JavaScript
 const closed = Channel()
@@ -179,7 +197,8 @@ const toArray = async (channel) => {
 }
 ```
 
-If `callbackfn` is async then `forEach` will wait for it before iterating to the next value:
+If `callbackfn` is async then `forEach` will wait for it before iterating to the
+next value:
 
 ```JavaScript
 const pipe = async (source, sink) => {
@@ -194,21 +213,26 @@ const pipe = async (source, sink) => {
 
 Unlike `Array`'s method, `push` accepts only one `value` at a time.
 
-Sends the value into the channel and returns a promise that resolves when the value has been shifted out or placed in the buffer.
+Sends the value into the channel and returns a promise that resolves when the
+value has been shifted out or placed in the buffer.
 
 * Throws a `TypeError` when attempting to push to a closed channel.
-* Throws a `TypeError` when attempting to push `undefined` because it's a reserved value used to indicate a closed channel.
+* Throws a `TypeError` when attempting to push `undefined` because it's a
+  reserved value used to indicate a closed channel.
 
 #### reduce(callbackfn[, initialValue])
 #### shift() -> Promise
 
-Returns a promise that resolves when an value is received from the channel.  Closed channels always return `undefined` immediately.
+Returns a promise that resolves when an value is received from the channel.
+Closed channels always return `undefined` immediately.
 
 #### slice(start, end) -> Channel
 
 # Contributing
 
-Please [submit an issue](https://github.com/NodeGuy/channel/issues/new) if you would like me to make `Channel` more `Array`-like (e.g., by adding another `Array` method).
+Please [submit an issue](https://github.com/NodeGuy/channel/issues/new) if you
+would like me to make `Channel` more `Array`-like (e.g., by adding another
+`Array` method).
 
 # Similar Projects
 
