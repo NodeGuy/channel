@@ -122,7 +122,7 @@ assert.equal(counter, 2)
 ```
 
 Sometimes you don't want to wait until a method completes.  You can use a closed
-channel to return immediately even if no methods are ready:
+channel to return immediately even if no other channels are ready:
 
 ```JavaScript
 const closed = Channel()
@@ -142,7 +142,7 @@ switch (await Channel.select(alice.shift(), bob.shift(), closed.shift()) {
 }
 ```
 
-You can also arrange it so that the select completes within a timeout:
+You can also arrange it so that the `select` completes within a timeout:
 
 ```JavaScript
 const timeout = Channel()
@@ -170,9 +170,12 @@ These methods are similar to the equivalently named methods of `Array`.
 
 #### Channel([bufferLength = 0]) -> Channel
 
-Create a new `Channel` with an optional buffer.
+Create a new `Channel` with an optional buffer.  This allows an async function
+to push up to `bufferLength` values before blocking.
 
 #### Channel.of(...values) -> Channel
+
+Pushes `values` into a new channel and then closes it.
 
 #### Channel.from(iterable | stream.Readable) -> Channel
 
@@ -197,6 +200,19 @@ Unlike in the Array version of `every`, `callbackfn` is called with only one
 argument.
 
 #### filter(callbackfn[, thisArg]) -> Channel
+
+`callbackfn` should be a function that accepts an argument and returns a value
+that is coercible to the Boolean values `true` or `false`.  `filter` calls
+`callbackfn` once for each value in the channel and constructs a new channel of
+all the values for which `callbackfn` returns true.
+
+If a `thisArg` parameter is provided, it will be used as the `this` value for
+each invocation of `callbackfn`. If it is not provided, `undefined` is used
+instead.
+
+Unlike in the Array version of `filter`, `callbackfn` is called with only one
+argument.
+
 #### forEach(callbackfn[, thisArg]) -> async
 
 The promise returned by `forEach` resolves when the channel is closed:
@@ -237,7 +253,7 @@ value has been shifted out or placed in the buffer.
   reserved value used to indicate a closed channel.
 
 #### reduce(callbackfn[, initialValue])
-#### shift() -> Promise
+#### shift() -> async
 
 Returns a promise that resolves when an value is received from the channel.
 Closed channels always return `undefined` immediately.
@@ -269,8 +285,8 @@ skipTen(channel)
 # Contributing
 
 Please [submit an issue](https://github.com/NodeGuy/channel/issues/new) if you
-would like me to make `Channel` more `Array`-like (e.g., by adding another
-`Array` method).
+have a suggestion for how to make `Channel` more `Array`-like (e.g., by adding
+another `Array` method).
 
 # Similar Projects
 
