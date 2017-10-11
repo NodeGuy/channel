@@ -180,6 +180,12 @@ describe(`Channel object`, function () {
     })
   })
 
+  it(`every`, async function () {
+    const even = (number) => number % 2 === 0
+    assert(!await Channel.of(0, 1, 2).every(even))
+    assert(await Channel.of(0, 2, 4).every(even))
+  })
+
   it(`filter`, async function () {
     assert.deepEqual(
       await toArray(Channel.of(0, 1, 2, 3, 4, 5)

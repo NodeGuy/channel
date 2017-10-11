@@ -180,6 +180,22 @@ Create a new `Channel` from an iterable or a [Node.js readable stream](https://n
 
 ### Channel Object
 
+#### every (callbackfn[, thisArg]) -> async Boolean
+
+`callbackfn` should be a function that accepts one argument and returns a value
+that is coercible to the Boolean values `true` or `false`.  `every` calls
+`callbackfn` once for each value present in the channel until it finds one where
+`callbackfn` returns `false`. If such a value is found, every immediately
+returns `false`. Otherwise, if `callbackfn` returned `true` for all elements,
+`every` will return `true`.
+
+If a `thisArg` parameter is provided, it will be used as the `this` value for
+each invocation of `callbackfn`. If it is not provided, `undefined` is used
+instead.
+
+Unlike in the Array version of `every`, `callbackfn` is called with only one
+argument.
+
 #### filter(callbackfn[, thisArg]) -> Channel
 #### forEach(callbackfn[, thisArg]) -> async
 
