@@ -99,6 +99,45 @@ describe(`Channel`, function () {
         break
     }
   })
+
+  describe(`functional interface`, async function () {
+    describe(`map`, function () {
+      it(`full application`, async function () {
+        assert.deepEqual(
+          await toArray(Channel.map(
+            (value) => value.toUpperCase(),
+            Channel.of(`a`, `b`, `c`)
+          )),
+          [`A`, `B`, `C`]
+        )
+      })
+
+      it(`partial application`, async function () {
+        assert.deepEqual(
+          await toArray(Channel.map((value) =>
+            value.toUpperCase())(Channel.of(`a`, `b`, `c`))
+          ),
+          [`A`, `B`, `C`]
+        )
+      })
+    })
+
+    describe(`slice`, function () {
+      it(`full application`, async function () {
+        assert.deepEqual(
+          await toArray(Channel.slice(1, 4, Channel.of(0, 1, 2, 3, 4))),
+          [1, 2, 3]
+        )
+      })
+
+      it(`partial application`, async function () {
+        assert.deepEqual(
+          await toArray(Channel.slice(1, 4)(Channel.of(0, 1, 2, 3, 4))),
+          [1, 2, 3]
+        )
+      })
+    })
+  })
 })
 
 describe(`Channel object`, function () {
@@ -143,7 +182,9 @@ describe(`Channel object`, function () {
 
   it(`filter`, async function () {
     assert.deepEqual(
-      await toArray(Channel.of(0, 1, 2, 3, 4, 5).filter(x => x % 2 !== 0)),
+      await toArray(Channel.of(0, 1, 2, 3, 4, 5)
+        .filter((value) => value % 2 !== 0)
+      ),
       [1, 3, 5]
     )
   })
@@ -165,7 +206,9 @@ describe(`Channel object`, function () {
 
   it(`map`, async function () {
     assert.deepEqual(
-      await toArray(Channel.of(`a`, `b`, `c`).map(x => x.toUpperCase())),
+      await toArray(Channel.of(`a`, `b`, `c`)
+        .map((value) => value.toUpperCase())
+      ),
       [`A`, `B`, `C`]
     )
   })

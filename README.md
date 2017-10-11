@@ -228,6 +228,28 @@ Closed channels always return `undefined` immediately.
 
 #### slice(start, end) -> Channel
 
+### Functional API
+
+There is a parallel API to support functional-style programming.  Every channel
+method is also available as an independent function in the `Channel` namespace
+that takes a channel as the final argument.  For example, `slice` can be called
+in either of the following two ways:
+
+```JavaScript
+// method
+channel.slice(10)
+
+// function
+Channel.slice(10, Infinity, channel)
+```
+
+You can also use partial application to pass the channel in later:
+
+```JavaScript
+const skipTen = Channel.slice(10, Infinity)
+skipTen(channel)
+```
+
 # Contributing
 
 Please [submit an issue](https://github.com/NodeGuy/channel/issues/new) if you
