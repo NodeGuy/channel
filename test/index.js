@@ -57,6 +57,11 @@ describe(`Channel`, function () {
     })
   })
 
+  it(`isChannel`, function () {
+    assert(Channel.isChannel(Channel.of(0, 1, 2)))
+    assert(!Channel.isChannel(Array.of(0, 1, 2)))
+  })
+
   it(`of`, async function () {
     assert.deepEqual(await toArray(Channel.of(0, 1, 2)), [0, 1, 2])
   })

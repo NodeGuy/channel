@@ -173,6 +173,10 @@ These methods are similar to the equivalently named methods of `Array`.
 Create a new `Channel` with an optional buffer.  This allows an async function
 to push up to `bufferLength` values before blocking.
 
+#### Channel.isChannel(value) -> Boolean
+
+Return `true` if `value` is a channel, `false` otherwise.
+
 #### Channel.of(...values) -> Channel
 
 Pushes `values` into a new channel and then closes it.
