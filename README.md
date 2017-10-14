@@ -257,6 +257,21 @@ value has been shifted out or placed in the buffer.
   reserved value used to indicate a closed channel.
 
 #### reduce(callbackfn[, initialValue])
+
+`callbackfn` should be a function that takes two arguments (unlike `Array`'s
+version which takes four). `reduce` calls the callback, as a function, once for
+each value after the first value present in the channel.
+
+`callbackfn` is called with two arguments: the `previousValue` (value from the
+previous call to `callbackfn`) and the `currentValue`. The first time that
+callback is called, the `previousValue` and `currentValue` can be one of two
+values. If an `initialValue` was provided in the call to `reduce`, then
+`previousValue` will be equal to `initialValue` and `currentValue` will be equal
+to the first value in the channel. If no `initialValue` was provided, then
+`previousValue` will be equal to the first value in the channel and
+`currentValue` will be equal to the second. It is a `TypeError` if the channel
+contains no values and `initialValue` is not provided.
+
 #### shift() -> async
 
 Returns a promise that resolves when an value is received from the channel.

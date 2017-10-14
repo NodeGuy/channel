@@ -4,6 +4,20 @@ const assert = require('@nodeguy/assert')
 const Channel = require('../lib')
 const stream = require('stream')
 
+const assertRejects = async (callback, reason) => {
+  try {
+    await callback()
+  } catch (exception) {
+    if (reason) {
+      assert.deepEqual(exception, reason)
+    }
+
+    return
+  }
+
+  assert.fail(null, reason, `Missing expected rejection.`)
+}
+
 const toArray = async (channel) => {
   const array = []
 
@@ -147,35 +161,22 @@ describe(`Channel`, function () {
 
 describe(`Channel object`, function () {
   describe(`close`, function () {
-    it(`can't close an already closed channel`, function (done) {
+    it(`can't close an already closed channel`, function () {
       const channel = Channel()
       channel.close()
 
-      channel.close()
-        .then(() => {
-          done(new Error())
-        })
-        .catch((reason) => {
-          assert.deepEqual(
-            reason,
-            new Error(`Can't close an already-closed channel.`)
-          )
-
-          done()
-        })
+      return assertRejects(async () => {
+        await channel.close()
+      }, new Error(`Can't close an already-closed channel.`))
     })
 
     it(`can't push to a closed channel`, async function () {
       const channel = Channel()
       channel.close()
 
-      return (async () => {
+      return assertRejects(async () => {
         await channel.push(0)
-      })().then(() => {
-        assert(false)
-      }).catch((reason) => {
-        assert.deepEqual(reason, new Error(`Can't push to closed channel.`))
-      })
+      }, new Error(`Can't push to closed channel.`))
     })
 
     it(`returns 'undefined' immediately from shift`, async function () {
@@ -239,43 +240,31 @@ describe(`Channel object`, function () {
       it(`outside select`, function () {
         const channel = Channel()
 
-        return (async () => {
-          await channel.push(undefined)
-        })().then(() => {
-          assert(false)
-        }).catch((reason) => {
-          assert.deepEqual(reason, new TypeError(
-            `Can't push 'undefined' to channel, use close instead.`
-          ))
-        })
+        return assertRejects(
+          async () => {
+            await channel.push(undefined)
+          },
+          new TypeError(`Can't push 'undefined' to channel, use close instead.`)
+        )
       })
 
       it(`inside select`, function () {
         const channel = Channel()
 
-        return (async () => {
+        return assertRejects(async () => {
           await Channel.select(channel.push(undefined))
-        })().then(() => {
-          assert(false)
-        }).catch((reason) => {
-          assert.deepEqual(reason, new TypeError(
-            `Can't push 'undefined' to channel, use close instead.`
-          ))
-        })
+        }, new TypeError(
+          `Can't push 'undefined' to channel, use close instead.`
+        ))
       })
     })
 
     it(`disallows multiple values`, function () {
       const channel = Channel()
 
-      return (async () => {
+      return assertRejects(async () => {
         await channel.push(0, 1, 2)
-      })().then(() => {
-        assert(false)
-      }).catch((reason) => {
-        assert.deepEqual(reason, new Error(
-          `Can't push more than one value at a time.`))
-      })
+      }, new Error(`Can't push more than one value at a time.`))
     })
 
     it(`returns a frozen promise`, function () {
@@ -314,16 +303,29 @@ describe(`Channel object`, function () {
     })
   })
 
-  it(`reduce`, async function () {
-    assert.equal(await Channel.of(0, 1, 2)
-      .reduce((previous, current) => previous + current),
-      3
-    )
+  describe(`reduce`, function () {
+    it(`callbackfn only`, async function () {
+      assert.equal(await Channel.of(0, 1, 2)
+        .reduce(Math.max),
+        2
+      )
+    })
 
-    assert.equal(await Channel.of(0, 1, 2)
-      .reduce((previous, current) => previous + current, 10),
-      13
-    )
+    it(`initialValue`, async function () {
+      assert.equal(await Channel.of(0, 1, 2)
+        .reduce(Math.max, 10),
+        10
+      )
+    })
+
+    it(`no values without initialValue`, function () {
+      return assertRejects(
+        async () => {
+          await Channel.of().reduce(Math.max)
+        },
+        new TypeError(`No values in channel and initialValue wasn't provided.`)
+      )
+    })
   })
 
   describe(`shift`, function () {
