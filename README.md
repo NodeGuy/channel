@@ -85,6 +85,9 @@ Returns a version of the channel that provides only write methods.
 returns the channel of the first one that succeeds.  Only the winning method is
 executed to completion—the other methods have no effect.
 
+All of the methods can be cancelled before completion by calling `cancel` on the
+promise returned from `select`.
+
 #### Examples
 
 Imagine you're at a party and your next conversation depends on whom you run

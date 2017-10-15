@@ -118,6 +118,13 @@ describe(`Channel`, function () {
         break
     }
   })
+
+  it(`cancel`, async function () {
+    const channel = Channel()
+    Channel.select(channel.push(`cancelled`)).cancel()
+    const closed = Channel.of()
+    assert.equal(await Channel.select(channel.shift(), closed.shift()), closed)
+  })
 })
 
 describe(`functional interface`, async function () {
