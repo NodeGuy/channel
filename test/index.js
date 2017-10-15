@@ -118,43 +118,43 @@ describe(`Channel`, function () {
         break
     }
   })
+})
 
-  describe(`functional interface`, async function () {
-    describe(`map`, function () {
-      it(`full application`, async function () {
-        assert.deepEqual(
-          await toArray(Channel.map(
-            (value) => value.toUpperCase(),
-            Channel.of(`a`, `b`, `c`)
-          )),
-          [`A`, `B`, `C`]
-        )
-      })
-
-      it(`partial application`, async function () {
-        assert.deepEqual(
-          await toArray(Channel.map((value) =>
-            value.toUpperCase())(Channel.of(`a`, `b`, `c`))
-          ),
-          [`A`, `B`, `C`]
-        )
-      })
+describe(`functional interface`, async function () {
+  describe(`map`, function () {
+    it(`full application`, async function () {
+      assert.deepEqual(
+        await toArray(Channel.map(
+          (value) => value.toUpperCase(),
+          Channel.of(`a`, `b`, `c`)
+        )),
+        [`A`, `B`, `C`]
+      )
     })
 
-    describe(`slice`, function () {
-      it(`full application`, async function () {
-        assert.deepEqual(
-          await toArray(Channel.slice(1, 4, Channel.of(0, 1, 2, 3, 4))),
-          [1, 2, 3]
-        )
-      })
+    it(`partial application`, async function () {
+      assert.deepEqual(
+        await toArray(Channel.map((value) =>
+          value.toUpperCase())(Channel.of(`a`, `b`, `c`))
+        ),
+        [`A`, `B`, `C`]
+      )
+    })
+  })
 
-      it(`partial application`, async function () {
-        assert.deepEqual(
-          await toArray(Channel.slice(1, 4)(Channel.of(0, 1, 2, 3, 4))),
-          [1, 2, 3]
-        )
-      })
+  describe(`slice`, function () {
+    it(`full application`, async function () {
+      assert.deepEqual(
+        await toArray(Channel.slice(1, 4, Channel.of(0, 1, 2, 3, 4))),
+        [1, 2, 3]
+      )
+    })
+
+    it(`partial application`, async function () {
+      assert.deepEqual(
+        await toArray(Channel.slice(1, 4)(Channel.of(0, 1, 2, 3, 4))),
+        [1, 2, 3]
+      )
     })
   })
 })
