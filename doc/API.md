@@ -62,18 +62,22 @@ Imagine you're at a party and your next conversation depends on whom you run
 into first: Alice, Bob, or Charlie.
 
 ```JavaScript
-switch (await Channel.select(alice.shift(), bob.shift(), charlie.push(`Hi!`)) {
+switch (await Channel.select(
+  alice.shift(),
+  bob.shift(),
+  charlie.push(`Hi!`)
+)) {
   case alice:
-    console.log(`Alice said ${alice.value}.`)
-    break
+    console.log(`Alice said ${alice.value}.`);
+    break;
 
   case bob:
-    console.log(`Bob said ${bob.value}.`)
-    break
+    console.log(`Bob said ${bob.value}.`);
+    break;
 
   case charlie:
-    console.log(`I said "hi" to Charlie.`)
-    break
+    console.log(`I said "hi" to Charlie.`);
+    break;
 }
 ```
 
@@ -81,55 +85,55 @@ Be careful of unintended side effects, however.  Even though only one value is
 pushed in the following example, the counter is incremented twice.
 
 ```JavaScript
-let counter = 0
+let counter = 0;
 
 const increment = () => {
-  counter++
-  return counter
-}
+  counter++;
+  return counter;
+};
 
-await Channel.select(alice.push(increment()), bob.push(increment()))
-assert.equal(counter, 2)
+await Channel.select(alice.push(increment()), bob.push(increment()));
+assert.equal(counter, 2);
 ```
 
 Sometimes you don't want to wait until a method completes.  You can use a closed
 channel to return immediately even if no other channels are ready:
 
 ```JavaScript
-const closed = Channel()
-closed.close()
+const closed = Channel();
+closed.close();
 
-switch (await Channel.select(alice.shift(), bob.shift(), closed.shift()) {
+switch (await Channel.select(alice.shift(), bob.shift(), closed.shift())) {
   case alice:
-    console.log(`Alice said ${alice.value}.`)
-    break
+    console.log(`Alice said ${alice.value}.`);
+    break;
 
   case bob:
-    console.log(`Bob said ${bob.value}.`)
-    break
+    console.log(`Bob said ${bob.value}.`);
+    break;
 
   default:
-    console.log(`No one has anything to say yet.`)
+    console.log(`No one has anything to say yet.`);
 }
 ```
 
 You can also arrange it so that the `select` completes within a timeout:
 
 ```JavaScript
-const timeout = Channel()
-setTimeout(timeout.close, 1000)
+const timeout = Channel();
+setTimeout(timeout.close, 1000);
 
-switch (await Channel.select(alice.shift(), bob.shift(), timeout.shift()) {
+switch (await Channel.select(alice.shift(), bob.shift(), timeout.shift())) {
   case alice:
-    console.log(`Alice said ${alice.value}.`)
-    break
+    console.log(`Alice said ${alice.value}.`);
+    break;
 
   case bob:
-    console.log(`Bob said ${bob.value}.`)
-    break
+    console.log(`Bob said ${bob.value}.`);
+    break;
 
   default:
-    console.log(`I stopped listening after one second.`)
+    console.log(`I stopped listening after one second.`);
 }
 ```
 
@@ -198,15 +202,15 @@ argument.
 The promise returned by `forEach` resolves when the channel is closed:
 
 ```JavaScript
-const toArray = async (channel) => {
-  const array = []
+const toArray = async channel => {
+  const array = [];
 
-  await channel.forEach((value) => {
-    array.push(value)
-  })
+  await channel.forEach(value => {
+    array.push(value);
+  });
 
-  return array
-}
+  return array;
+};
 ```
 
 If `callbackfn` is async then `forEach` will wait for it before iterating to the
@@ -214,9 +218,9 @@ next value:
 
 ```JavaScript
 const pipe = async (source, sink) => {
-  await source.forEach(sink.push)
-  sink.close()
-}
+  await source.forEach(sink.push);
+  sink.close();
+};
 ```
 
 ### join(separator) -> async String
@@ -286,15 +290,15 @@ in either of the following two ways:
 
 ```JavaScript
 // method
-channel.slice(10)
+channel.slice(10);
 
 // function
-Channel.slice(10, Infinity, channel)
+Channel.slice(10, Infinity, channel);
 ```
 
 You can also use partial application to pass the channel in later:
 
 ```JavaScript
-const skipTen = Channel.slice(10, Infinity)
-skipTen(channel)
+const skipTen = Channel.slice(10, Infinity);
+skipTen(channel);
 ```

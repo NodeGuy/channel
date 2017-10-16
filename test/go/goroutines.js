@@ -5,29 +5,29 @@
 // Torture test for goroutines.
 // Make a lot of goroutines, threaded together, and tear them down cleanly.
 
-'use strict'
+"use strict";
 
-const Channel = require('../../lib')
+const Channel = require("../../lib");
 
-it(`goroutines`, async function () {
+it(`goroutines`, async function() {
   const f = async (left, right) => {
-    await left.push(await right.shift())
-  }
+    await left.push(await right.shift());
+  };
 
-  const n = 10000
-  const leftmost = Channel()
-  let right = leftmost
-  let left = leftmost
+  const n = 10000;
+  const leftmost = Channel();
+  let right = leftmost;
+  let left = leftmost;
 
   for (let i = 0; i < n; i++) {
-    right = Channel()
-    f(left, right)
-    left = right
+    right = Channel();
+    f(left, right);
+    left = right;
   }
 
-  ;(async (c) => {
-    await c.push(1)
-  })(right)
+  (async c => {
+    await c.push(1);
+  })(right);
 
-  await leftmost.shift()
-})
+  await leftmost.shift();
+});

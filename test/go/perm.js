@@ -7,72 +7,72 @@
 // Test various correct and incorrect permutations of send-only,
 // receive-only, and bidirectional channels.
 
-'use strict'
+"use strict";
 
-const assert = require(`@nodeguy/assert`)
-const Channel = require('../../lib')
+const assert = require(`@nodeguy/assert`);
+const Channel = require("../../lib");
 
-it(`perm`, function () {
-  const c = Channel()
-  const cr = Channel().readOnly()
-  const cs = Channel().writeOnly()
+it(`perm`, function() {
+  const c = Channel();
+  const cr = Channel().readOnly();
+  const cs = Channel().writeOnly();
 
-  const n = 0
-
-  assert.throws(() => {
-    Channel.shift(n) // ERROR "receive from non-chan"
-  })
+  const n = 0;
 
   assert.throws(() => {
-    Channel.push(2, n) // ERROR "send to non-chan"
-  })
-
-  c.push(0) // ok
-  c.shift() // ok
+    Channel.shift(n); // ERROR "receive from non-chan"
+  });
 
   assert.throws(() => {
-    cr.push(0) // ERROR "send"
-  })
+    Channel.push(2, n); // ERROR "send to non-chan"
+  });
 
-  cr.shift() // ok
-
-  cs.push(0) // ok
+  c.push(0); // ok
+  c.shift(); // ok
 
   assert.throws(() => {
-    cs.shift() // ERROR "receive"
-  })
+    cr.push(0); // ERROR "send"
+  });
+
+  cr.shift(); // ok
+
+  cs.push(0); // ok
+
+  assert.throws(() => {
+    cs.shift(); // ERROR "receive"
+  });
 
   Channel.select(
     c.push(0), // ok
-    c.shift()  // ok
-  )
+    c.shift() // ok
+  );
 
   assert.throws(() => {
     Channel.select(
       cr.push(0) // ERROR "send"
-    )
-  })
+    );
+  });
 
-  Channel.select(cr.shift()) // ok
+  Channel.select(cr.shift()); // ok
 
-  Channel.select(cs.push(0)) // ok
-
-  assert.throws(() => {
-    Channel.select(cs.shift()) // ERROR "receive"
-  })
+  Channel.select(cs.push(0)); // ok
 
   assert.throws(() => {
-    cs.forEach(() => {}) // ERROR "receive"
-  })
-
-  c.close()
-  cs.close()
+    Channel.select(cs.shift()); // ERROR "receive"
+  });
 
   assert.throws(() => {
-    cr.close() // ERROR "receive"
-  })
+    cs.forEach(() => {}); // ERROR "receive"
+  });
+
+  c.close();
+  cs.close();
 
   assert.throws(() => {
-    Channel.close(n) // ERROR "invalid operation.*non-chan type"
-  })
-})
+    cr.close(); // ERROR "receive"
+  });
+
+  assert.throws(() => {
+    Channel.close(n); // ERROR "invalid operation.*non-chan type"
+  });
+});

@@ -4,58 +4,58 @@
 
 // Test that unbuffered channels act as pure fifos.
 
-'use strict'
+"use strict";
 
-const Channel = require('../../lib')
+const Channel = require("../../lib");
 
-it(`fifo`, function () {
-  const N = 10
+it(`fifo`, function() {
+  const N = 10;
 
   const AsynchFifo = async () => {
-    const ch = Channel(10)
+    const ch = Channel(10);
 
     for (let i = 0; i < N; i++) {
-      await ch.push(i)
+      await ch.push(i);
     }
 
     for (let i = 0; i < N; i++) {
-      if (await ch.shift() !== i) {
-        throw new Error(`bad receive`)
+      if ((await ch.shift()) !== i) {
+        throw new Error(`bad receive`);
       }
     }
-  }
+  };
 
   const Chain = async (ch, val, input, output) => {
-    await input.shift()
+    await input.shift();
 
-    if (await ch.shift() !== val) {
-      throw new Error(val)
+    if ((await ch.shift()) !== val) {
+      throw new Error(val);
     }
 
-    await output.push(1)
-  }
+    await output.push(1);
+  };
 
   // thread together a daisy chain to read the elements in sequence
   const SynchFifo = async () => {
-    const ch = Channel()
-    let input = Channel()
-    let start = input
+    const ch = Channel();
+    let input = Channel();
+    let start = input;
 
     for (let i = 0; i < N; i++) {
-      const output = Channel()
-      Chain(ch, i, input, output)
-      input = output
+      const output = Channel();
+      Chain(ch, i, input, output);
+      input = output;
     }
 
-    await start.push(0)
+    await start.push(0);
 
     for (let i = 0; i < N; i++) {
-      await ch.push(i)
+      await ch.push(i);
     }
 
-    await input.shift()
-  }
+    await input.shift();
+  };
 
-  AsynchFifo()
-  SynchFifo()
-})
+  AsynchFifo();
+  SynchFifo();
+});
