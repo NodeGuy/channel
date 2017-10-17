@@ -23,6 +23,7 @@
     - [reduce(callbackfn[, initialValue])](#reducecallbackfn-initialvalue)
     - [shift() -> async](#shift---async)
     - [slice(start[, end]) -> Channel](#slicestart-end---channel)
+    - [some(callbackfn[, thisArg])](#somecallbackfn-thisarg)
 - [Functional API](#functional-api)
 
 <!-- /TOC -->
@@ -285,6 +286,23 @@ is provided then close the new channel after `end` - `start` values have been
 pushed.
 
 Unlike in `Array`'s method, `start` and `end` cannot be negative.
+
+### some(callbackfn[, thisArg])
+
+`callbackfn` should be a function that accepts one argument and returns a value
+that is coercible to the Boolean values `true` or `false`. `some` calls
+`callbackfn` once for each value in the channel until it finds one where
+`callbackfn` returns `true`. If such a value is found, `some` immediately
+returns `true`. Otherwise, `some` returns `false`.
+
+If a `thisArg` parameter is provided, it will be used as the `this` value for
+each invocation of `callbackfn`. If it is not provided, `undefined` is used
+instead.
+
+Unlike in `Array`'s method, `callbackfn` is called with only one argument.
+
+`some` acts like the "exists" quantifier in mathematics. In particular, for an
+empty channel, it returns `false`.
 
 # Functional API
 

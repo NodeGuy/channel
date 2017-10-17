@@ -336,6 +336,14 @@ describe(`Channel object`, function() {
     });
   });
 
+  it(`some`, async function() {
+    const even = value => value % 2 === 0;
+    const channel = Channel.of(0, 1, 2);
+    assert(await channel.some(even));
+    assert.deepEqual(await toArray(channel), [1, 2]);
+    assert(!await Channel.of(1, 3, 5).some(even));
+  });
+
   it(`value`, async function() {
     const channel = Channel();
     (async () => {
