@@ -295,9 +295,9 @@ channel.slice(10);
 Channel.slice(10, Infinity, channel);
 ```
 
-You can also use partial application to pass the channel in later:
+You can also use partial application:
 
 ```JavaScript
-const skipTen = Channel.slice(10, Infinity);
-skipTen(channel);
+Channel.slice(10, Infinity)(channel);
+Channel.slice(10)(Infinity)(channel);
 ```

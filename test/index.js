@@ -129,26 +129,6 @@ describe(`Channel`, function() {
 });
 
 describe(`functional interface`, async function() {
-  describe(`map`, function() {
-    it(`full application`, async function() {
-      assert.deepEqual(
-        await toArray(
-          Channel.map(value => value.toUpperCase(), Channel.of(`a`, `b`, `c`))
-        ),
-        [`A`, `B`, `C`]
-      );
-    });
-
-    it(`partial application`, async function() {
-      assert.deepEqual(
-        await toArray(
-          Channel.map(value => value.toUpperCase())(Channel.of(`a`, `b`, `c`))
-        ),
-        [`A`, `B`, `C`]
-      );
-    });
-  });
-
   describe(`slice`, function() {
     it(`full application`, async function() {
       assert.deepEqual(
@@ -157,7 +137,14 @@ describe(`functional interface`, async function() {
       );
     });
 
-    it(`partial application`, async function() {
+    it(`single argument application`, async function() {
+      assert.deepEqual(
+        await toArray(Channel.slice(1)(4)(Channel.of(0, 1, 2, 3, 4))),
+        [1, 2, 3]
+      );
+    });
+
+    it(`double argument application`, async function() {
       assert.deepEqual(
         await toArray(Channel.slice(1, 4)(Channel.of(0, 1, 2, 3, 4))),
         [1, 2, 3]
