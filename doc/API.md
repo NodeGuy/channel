@@ -14,7 +14,7 @@
     - [Channel.of(...values) -> Channel](#channelofvalues---channel)
     - [Channel.from(iterable | stream.Readable) -> Channel](#channelfromiterable--streamreadable---channel)
   - [Channel Object](#channel-object)
-    - [every (callbackfn[, thisArg]) -> async Boolean](#every-callbackfn-thisarg---async-boolean)
+    - [every(callbackfn[, thisArg]) -> async Boolean](#everycallbackfn-thisarg---async-boolean)
     - [filter(callbackfn[, thisArg]) -> Channel](#filtercallbackfn-thisarg---channel)
     - [forEach(callbackfn[, thisArg]) -> async](#foreachcallbackfn-thisarg---async)
     - [join(separator) -> async String](#joinseparator---async-string)
@@ -163,11 +163,12 @@ Push `values` into a new channel and then close it.
 
 ### Channel.from(iterable | stream.Readable) -> Channel
 
-Create a new `Channel` from an iterable or a [Node.js readable stream](https://nodejs.org/api/stream.html#stream_readable_streams).
+Create a new `Channel` from an iterable or a [Node.js readable
+stream](https://nodejs.org/api/stream.html#stream_readable_streams).
 
 ## Channel Object
 
-### every (callbackfn[, thisArg]) -> async Boolean
+### every(callbackfn[, thisArg]) -> async Boolean
 
 `callbackfn` should be a function that accepts one argument and returns a value
 that is coercible to the Boolean values `true` or `false`.  `every` calls
@@ -250,8 +251,8 @@ value has been shifted or placed in the buffer.
 * Throw a `TypeError` when attempting to push `undefined` because it's a
   reserved value used to indicate a closed channel.
 
-The push can be cancelled before completion by calling `cancel` on the
-returned promise.
+The push can be cancelled before completion by calling `cancel` on the returned
+promise.
 
 Unlike `Array`'s method, accept only one `value` at a time.
 
@@ -276,8 +277,8 @@ contains no values and `initialValue` is not provided.
 Return a promise that resolves when an value is received from the channel.
 Closed channels always return `undefined` immediately.
 
-The shift can be cancelled before completion by calling `cancel` on the
-returned promise.
+The shift can be cancelled before completion by calling `cancel` on the returned
+promise.
 
 ### slice(start[, end]) -> Channel
 
