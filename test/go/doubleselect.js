@@ -18,7 +18,7 @@ it(`doubleselect`, async function() {
   // different channels.
   const sender = async (n, c1, c2, c3, c4) => {
     for (let i = 0; i < n; i++) {
-      await Channel.select(c1.push(i), c2.push(i), c3.push(i), c4.push(i));
+      await Channel.select([c1.push(i), c2.push(i), c3.push(i), c4.push(i)]);
     }
 
     c1.close();

@@ -4,7 +4,7 @@
   - [close() -> async](#close---async)
   - [readOnly() -> Channel](#readonly---channel)
   - [writeOnly() -> Channel](#writeonly---channel)
-  - [Channel.select(methods) -> async channel](#channelselectmethods---async-channel)
+  - [Channel.select(promises) -> async channel](#channelselectpromises---async-channel)
     - [Examples](#examples)
   - [value](#value)
 - [Array-like Properties](#array-like-properties)
@@ -47,14 +47,13 @@ Return a version of the channel that provides only read methods.
 
 Return a version of the channel that provides only write methods.
 
-## Channel.select(methods) -> async channel
+## Channel.select(promises) -> async channel
 
-Attempt to call multiple channel `methods` in parallel and return the channel of
-the first one that succeeds.  Only the winning method is executed to
-completion—the other methods have no effect.
+Wait for the first channel method promise to succeed and then cancel the rest.
+Return the channel of the winning promise.
 
-All of the methods can be cancelled before completion by calling `cancel` on the
-promise returned from `select`.
+All of the promises can be cancelled before completion by calling `cancel` on
+the promise returned by `select`.
 
 ### Examples
 
@@ -62,11 +61,11 @@ Imagine you're at a party and your next conversation depends on whom you run
 into first: Alice, Bob, or Charlie.
 
 ```JavaScript
-switch (await Channel.select(
+switch (await Channel.select([
   alice.shift(),
   bob.shift(),
   charlie.push(`Hi!`)
-)) {
+])) {
   case alice:
     console.log(`Alice said ${alice.value}.`);
     break;
@@ -92,7 +91,7 @@ const increment = () => {
   return counter;
 };
 
-await Channel.select(alice.push(increment()), bob.push(increment()));
+await Channel.select([alice.push(increment()), bob.push(increment())]);
 assert.equal(counter, 2);
 ```
 
@@ -103,7 +102,7 @@ channel to return immediately even if no other channels are ready:
 const closed = Channel();
 closed.close();
 
-switch (await Channel.select(alice.shift(), bob.shift(), closed.shift())) {
+switch (await Channel.select([alice.shift(), bob.shift(), closed.shift())]) {
   case alice:
     console.log(`Alice said ${alice.value}.`);
     break;
@@ -123,7 +122,7 @@ You can also arrange it so that the `select` completes within a timeout:
 const timeout = Channel();
 setTimeout(timeout.close, 1000);
 
-switch (await Channel.select(alice.shift(), bob.shift(), timeout.shift())) {
+switch (await Channel.select([alice.shift(), bob.shift(), timeout.shift())]) {
   case alice:
     console.log(`Alice said ${alice.value}.`);
     break;

@@ -89,10 +89,10 @@ describe(`Channel`, function() {
         await a.shift();
       })();
 
-      assert.equal(await Channel.select(a.shift(), b.shift()), b);
+      assert.equal(await Channel.select([a.shift(), b.shift()]), b);
       assert.equal(b.value, 0);
       assert.equal(await a.shift(), 1);
-      assert.equal(await Channel.select(a.push(0), b.shift()), a);
+      assert.equal(await Channel.select([a.push(0), b.shift()]), a);
     });
   });
 
@@ -102,7 +102,7 @@ describe(`Channel`, function() {
     const nonBlocking = Channel();
     nonBlocking.close();
 
-    switch (await Channel.select(a.shift(), b.push(0), nonBlocking.shift())) {
+    switch (await Channel.select([a.shift(), b.push(0), nonBlocking.shift()])) {
       case a:
         assert(false);
         break;
@@ -119,9 +119,12 @@ describe(`Channel`, function() {
 
   it(`cancel`, async function() {
     const channel = Channel();
-    Channel.select(channel.push(`cancelled`)).cancel();
+    Channel.select([channel.push(`cancelled`)]).cancel();
     const closed = Channel.of();
-    assert.equal(await Channel.select(channel.shift(), closed.shift()), closed);
+    assert.equal(
+      await Channel.select([channel.shift(), closed.shift()]),
+      closed
+    );
   });
 });
 
@@ -251,7 +254,7 @@ describe(`Channel object`, function() {
         const channel = Channel();
 
         return assertRejects(async () => {
-          await Channel.select(channel.push(undefined));
+          await Channel.select([channel.push(undefined)]);
         }, new TypeError(`Can't push 'undefined' to channel, use close instead.`));
       });
     });

@@ -24,11 +24,11 @@ it(`select`, async function() {
     let i = 0;
 
     do {
-      switch (await Channel.select(
+      switch (await Channel.select([
         a.push(GetValue()),
         b.push(GetValue()),
         closed.shift()
-      )) {
+      ])) {
         case a:
           i++;
           a = Channel();
