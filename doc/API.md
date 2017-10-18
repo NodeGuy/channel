@@ -144,7 +144,7 @@ combination with `select`.
 
 # Array-like Properties
 
-These methods are similar to the equivalently named methods of `Array`.
+These properties are similar to the equivalently named properties of `Array`.
 
 ## Channel
 
