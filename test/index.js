@@ -356,6 +356,10 @@ describe(`Channel object`, function() {
     assert(!await Channel.of(1, 3, 5).some(even));
   });
 
+  it(`toString`, function() {
+    assert.equal(Channel(10).toString(), `Channel(10)`);
+  });
+
   it(`value`, async function() {
     const channel = Channel();
     (async () => {

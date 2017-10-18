@@ -24,6 +24,7 @@
     - [shift() -> async](#shift---async)
     - [slice(start[, end]) -> Channel](#slicestart-end---channel)
     - [some(callbackfn[, thisArg])](#somecallbackfn-thisarg)
+    - [toString()](#tostring)
 - [Functional API](#functional-api)
 
 <!-- /TOC -->
@@ -304,6 +305,10 @@ Unlike in `Array`'s method, `callbackfn` is called with only one argument.
 
 `some` acts like the "exists" quantifier in mathematics. In particular, for an
 empty channel, it returns `false`.
+
+### toString() -> String
+
+Return `"Channel(n)"` where `n` is the length of the buffer.
 
 # Functional API
 
