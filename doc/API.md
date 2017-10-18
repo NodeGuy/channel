@@ -25,7 +25,7 @@
     - [shift() -> async](#shift---async)
     - [slice(start[, end]) -> Channel](#slicestart-end---channel)
     - [some(callbackfn[, thisArg])](#somecallbackfn-thisarg)
-    - [toString()](#tostring)
+    - [toString() -> String](#tostring---string)
     - [values() -> async iterator](#values---async-iterator)
 - [Functional API](#functional-api)
 
