@@ -35,23 +35,23 @@ To send a value to a channel use `push`.  To receive a value from a channel use
 there are no more values to push.
 
 ```JavaScript
-const assert = require(`assert`)
-const Channel = require(`@nodeguy/channel`)
+const assert = require(`assert`);
+const Channel = require(`@nodeguy/channel`);
 
-const channel = Channel()
+const channel = Channel();
 
 const send = async () => {
-  await channel.push(42)
-  await channel.close()
-}
+  await channel.push(42);
+  await channel.close();
+};
 
 const receive = async () => {
-  assert.equal(await channel.shift(), 42)
-  assert.equal(await channel.shift(), undefined)
-}
+  assert.equal(await channel.shift(), 42);
+  assert.equal(await channel.shift(), undefined);
+};
 
-send()
-receive()
+send();
+receive();
 ```
 
 The `push` and `shift` methods are usually called in different async functions.
