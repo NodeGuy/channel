@@ -42,23 +42,23 @@ it(`perm`, function() {
     cs.shift(); // ERROR "receive"
   });
 
-  Channel.select(
+  Channel.select([
     c.push(0), // ok
     c.shift() // ok
-  );
+  ]);
 
   assert.throws(() => {
-    Channel.select(
+    Channel.select([
       cr.push(0) // ERROR "send"
-    );
+    ]);
   });
 
-  Channel.select(cr.shift()); // ok
+  Channel.select([cr.shift()]); // ok
 
-  Channel.select(cs.push(0)); // ok
+  Channel.select([cs.push(0)]); // ok
 
   assert.throws(() => {
-    Channel.select(cs.shift()); // ERROR "receive"
+    Channel.select([cs.shift()]); // ERROR "receive"
   });
 
   assert.throws(() => {
