@@ -62,12 +62,6 @@ behavior of the async functions.
 
 The [API](doc/API.md) is in the `doc` directory.
 
-# Contributing
-
-Please [submit an issue](https://github.com/NodeGuy/channel/issues/new) if you
-have a suggestion for how to make `Channel` more `Array`-like (e.g., by adding
-another `Array` method).
-
 # Similar Projects
 
 * [Channel](https://github.com/gozala/channel)
