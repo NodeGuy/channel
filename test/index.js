@@ -99,10 +99,12 @@ describe(`Channel`, function() {
   it(`allows for non-blocking selects`, async function() {
     const a = Channel();
     const b = Channel();
-    const nonBlocking = Channel();
-    nonBlocking.close();
 
-    switch (await Channel.select([a.shift(), b.push(0), nonBlocking.shift()])) {
+    switch (await Channel.select([
+      a.shift(),
+      b.push(0),
+      Channel.of().shift()
+    ])) {
       case a:
         assert(false);
         break;
