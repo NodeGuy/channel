@@ -122,7 +122,7 @@ describe(`Channel`, function() {
   it(`complains when given non-channel method promises`, function() {
     assertRejects(async () => {
       await Channel.select([Promise.resolve()]);
-    }, new TypeError(`Channel.select accepts only Channel method promises.`));
+    }, new TypeError(`Channel.select accepts only promises returned by push & shift.`));
   });
 });
 
