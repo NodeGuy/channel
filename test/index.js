@@ -128,6 +128,12 @@ describe(`Channel`, function() {
       closed
     );
   });
+
+  it(`complains when given non-channel method promises`, function() {
+    assertRejects(async () => {
+      await Channel.select([Promise.resolve()]);
+    }, new TypeError(`Channel.select accepts only Channel method promises.`));
+  });
 });
 
 describe(`functional interface`, async function() {
