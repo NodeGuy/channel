@@ -129,6 +129,10 @@ describe(`Channel`, function() {
 });
 
 describe(`functional interface`, async function() {
+  it(`shift`, async function() {
+    assert.equal(await Channel.shift(Channel.of(0)), 0);
+  });
+
   describe(`slice`, function() {
     it(`full application`, async function() {
       assert.deepEqual(
