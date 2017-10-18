@@ -18,6 +18,7 @@
     - [filter(callbackfn[, thisArg]) -> Channel](#filtercallbackfn-thisarg---channel)
     - [forEach(callbackfn[, thisArg]) -> async](#foreachcallbackfn-thisarg---async)
     - [join(separator) -> async String](#joinseparator---async-string)
+    - [length](#length)
     - [map(callbackfn[, thisArg]) -> Channel](#mapcallbackfn-thisarg---channel)
     - [push(value) -> async bufferLength](#pushvalue---async-bufferlength)
     - [reduce(callbackfn[, initialValue])](#reducecallbackfn-initialvalue)
@@ -231,6 +232,10 @@ const pipe = async (source, sink) => {
 The values of the channel are converted to Strings, and these Strings are then
 concatenated, separated by occurrences of the separator. If no separator is
 provided, a single comma is used as the separator.
+
+### length
+
+The length of the channel's buffer.
 
 ### map(callbackfn[, thisArg]) -> Channel
 

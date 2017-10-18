@@ -217,6 +217,10 @@ describe(`Channel object`, function() {
     assert.equal(await Channel.of(`a`, `b`, `c`).join(), `a,b,c`);
   });
 
+  it(`length`, function() {
+    assert.equal(Channel(42).length, 42);
+  });
+
   it(`map`, async function() {
     assert.deepEqual(
       await Channel.of(`a`, `b`, `c`)
