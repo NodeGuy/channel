@@ -25,6 +25,7 @@
     - [slice(start[, end]) -> Channel](#slicestart-end---channel)
     - [some(callbackfn[, thisArg])](#somecallbackfn-thisarg)
     - [toString()](#tostring)
+    - [values() -> async iterator](#values---async-iterator)
 - [Functional API](#functional-api)
 
 <!-- /TOC -->
@@ -309,6 +310,10 @@ empty channel, it returns `false`.
 ### toString() -> String
 
 Return `"Channel(n)"` where `n` is the length of the buffer.
+
+### values() -> async iterator
+
+Return an iterator over the values in the channel.
 
 # Functional API
 

@@ -18,16 +18,6 @@ const assertRejects = async (callback, reason) => {
   assert.fail(null, reason, `Missing expected rejection.`);
 };
 
-const toArray = async channel => {
-  const array = [];
-
-  await channel.forEach(item => {
-    array.push(item);
-  });
-
-  return array;
-};
-
 describe(`Channel`, function() {
   it(`allows the use of new`, function() {
     return new Channel();
@@ -58,7 +48,7 @@ describe(`Channel`, function() {
 
   describe(`from`, function() {
     it(`iterable`, async function() {
-      assert.deepEqual(await toArray(Channel.from([0, 1, 2])), [0, 1, 2]);
+      assert.deepEqual(await Channel.from([0, 1, 2]).values(), [0, 1, 2]);
     });
 
     it(`Node.js's stream.readOnly`, async function() {
@@ -66,7 +56,7 @@ describe(`Channel`, function() {
       readOnly.write(0);
       readOnly.write(1);
       readOnly.end(2);
-      assert.deepEqual(await toArray(Channel.from(readOnly)), [0, 1, 2]);
+      assert.deepEqual(await Channel.from(readOnly).values(), [0, 1, 2]);
     });
   });
 
@@ -76,7 +66,7 @@ describe(`Channel`, function() {
   });
 
   it(`of`, async function() {
-    assert.deepEqual(await toArray(Channel.of(0, 1, 2)), [0, 1, 2]);
+    assert.deepEqual(await Channel.of(0, 1, 2).values(), [0, 1, 2]);
   });
 
   describe(`select`, function() {
@@ -144,21 +134,21 @@ describe(`functional interface`, async function() {
   describe(`slice`, function() {
     it(`full application`, async function() {
       assert.deepEqual(
-        await toArray(Channel.slice(1, 4, Channel.of(0, 1, 2, 3, 4))),
+        await Channel.slice(1, 4, Channel.of(0, 1, 2, 3, 4)).values(),
         [1, 2, 3]
       );
     });
 
     it(`single argument application`, async function() {
       assert.deepEqual(
-        await toArray(Channel.slice(1)(4)(Channel.of(0, 1, 2, 3, 4))),
+        await Channel.slice(1)(4)(Channel.of(0, 1, 2, 3, 4)).values(),
         [1, 2, 3]
       );
     });
 
     it(`double argument application`, async function() {
       assert.deepEqual(
-        await toArray(Channel.slice(1, 4)(Channel.of(0, 1, 2, 3, 4))),
+        await Channel.slice(1, 4)(Channel.of(0, 1, 2, 3, 4)).values(),
         [1, 2, 3]
       );
     });
@@ -200,9 +190,9 @@ describe(`Channel object`, function() {
 
   it(`filter`, async function() {
     assert.deepEqual(
-      await toArray(
-        Channel.of(0, 1, 2, 3, 4, 5).filter(value => value % 2 !== 0)
-      ),
+      await Channel.of(0, 1, 2, 3, 4, 5)
+        .filter(value => value % 2 !== 0)
+        .values(),
       [1, 3, 5]
     );
   });
@@ -214,7 +204,7 @@ describe(`Channel object`, function() {
       output.close();
     })();
 
-    assert.deepEqual(await toArray(output), [0, 1, 2]);
+    assert.deepEqual(await output.values(), [0, 1, 2]);
   });
 
   it(`join`, async function() {
@@ -223,9 +213,9 @@ describe(`Channel object`, function() {
 
   it(`map`, async function() {
     assert.deepEqual(
-      await toArray(
-        Channel.of(`a`, `b`, `c`).map(value => value.toUpperCase())
-      ),
+      await Channel.of(`a`, `b`, `c`)
+        .map(value => value.toUpperCase())
+        .values(),
       [`A`, `B`, `C`]
     );
   });
@@ -336,15 +326,21 @@ describe(`Channel object`, function() {
 
   describe(`slice`, function() {
     it(`start`, async function() {
-      assert.deepEqual(await toArray(Channel.of(0, 1, 2).slice(1)), [1, 2]);
+      assert.deepEqual(
+        await Channel.of(0, 1, 2)
+          .slice(1)
+          .values(),
+        [1, 2]
+      );
     });
 
     it(`end`, async function() {
-      assert.deepEqual(await toArray(Channel.of(0, 1, 2, 3, 4).slice(1, 4)), [
-        1,
-        2,
-        3
-      ]);
+      assert.deepEqual(
+        await Channel.of(0, 1, 2, 3, 4)
+          .slice(1, 4)
+          .values(),
+        [1, 2, 3]
+      );
     });
   });
 
@@ -352,7 +348,7 @@ describe(`Channel object`, function() {
     const even = value => value % 2 === 0;
     const channel = Channel.of(0, 1, 2);
     assert(await channel.some(even));
-    assert.deepEqual(await toArray(channel), [1, 2]);
+    assert.deepEqual(await channel.values(), [1, 2]);
     assert(!await Channel.of(1, 3, 5).some(even));
   });
 
@@ -376,6 +372,10 @@ describe(`Channel object`, function() {
     channel.close();
     await channel.shift();
     assert.equal(channel.value, undefined);
+  });
+
+  it(`values`, async function() {
+    assert.deepEqual(await Channel.of(0, 1, 2).values(), [0, 1, 2]);
   });
 
   describe(`writeOnly`, function() {
