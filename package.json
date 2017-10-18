@@ -18,11 +18,7 @@
     "prettier": "1.7.4"
   },
   "homepage": "https://github.com/NodeGuy/channel",
-  "keywords": [
-    "CSP",
-    "channel",
-    "concurrency"
-  ],
+  "keywords": ["CSP", "channel", "concurrency"],
   "license": "Apache-2.0",
   "main": "lib/index.js",
   "repository": {
@@ -32,16 +28,5 @@
   "scripts": {
     "precommit": "prettier --write lib/**/*.js test/**/*.js",
     "test": "mocha --recursive"
-  },
-  "standard": {
-    "globals": [
-      "after",
-      "afterEach",
-      "before",
-      "beforeEach",
-      "describe",
-      "it",
-      "run"
-    ]
   }
 }
