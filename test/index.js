@@ -120,13 +120,13 @@ describe(`Channel`, function() {
   });
 
   it(`complains when given non-channel method promises`, function() {
-    assertRejects(async () => {
+    return assertRejects(async () => {
       await Channel.select([Promise.resolve()]);
     }, new TypeError(`Channel.select accepts only promises returned by push & shift.`));
   });
 
   it(`complains if not given an array`, function() {
-    assertRejects(async () => {
+    return assertRejects(async () => {
       await Channel.select(Channel.of(0).shift(), Channel.of(1).shift());
     }, new TypeError(`Channel.select: Argument must be an array.`));
   });
