@@ -45,6 +45,12 @@ describe(`Channel`, function() {
   });
 
   describe(`from`, function() {
+    it(`callback`, async function() {
+      let counter = 0;
+      const callback = () => (counter < 3 ? counter++ : undefined);
+      assert.deepEqual(await Channel.from(callback).values(), [0, 1, 2]);
+    });
+
     it(`iterable`, async function() {
       assert.deepEqual(await Channel.from([0, 1, 2]).values(), [0, 1, 2]);
     });

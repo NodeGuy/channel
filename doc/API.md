@@ -12,7 +12,7 @@
     - [Channel([bufferLength = 0]) -> Channel](#channelbufferlength--0---channel)
     - [Channel.isChannel(value) -> Boolean](#channelischannelvalue---boolean)
     - [Channel.of(...values) -> Channel](#channelofvalues---channel)
-    - [Channel.from(iterable | stream.Readable) -> Channel](#channelfromiterable--streamreadable---channel)
+    - [Channel.from(callback | iterable | stream.Readable) -> Channel](#channelfromcallback--iterable--streamreadable---channel)
   - [Channel Object](#channel-object)
     - [every(callbackfn[, thisArg]) -> async Boolean](#everycallbackfn-thisarg---async-boolean)
     - [filter(callbackfn[, thisArg]) -> Channel](#filtercallbackfn-thisarg---channel)
@@ -164,10 +164,14 @@ Return `true` if `value` is a channel, `false` otherwise.
 
 Push `values` into a new channel and then close it.
 
-### Channel.from(iterable | stream.Readable) -> Channel
+### Channel.from(callback | iterable | stream.Readable) -> Channel
 
-Create a new `Channel` from an iterable or a [Node.js readable
-stream](https://nodejs.org/api/stream.html#stream_readable_streams).
+Create a new `Channel` from a callback function, an iterable, or a [Node.js
+readable stream](https://nodejs.org/api/stream.html#stream_readable_streams).
+
+If given a callback function, call the function repeatedly to obtain values for
+pushing into the channel.  Close the channel when the function returns
+`undefined`.
 
 ## Channel Object
 
