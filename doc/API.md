@@ -6,7 +6,7 @@
   - [writeOnly() -> Channel](#writeonly---channel)
   - [Channel.select(promises) -> async channel](#channelselectpromises---async-channel)
     - [Examples](#examples)
-  - [value](#value)
+  - [value()](#value)
 - [Array-like Properties](#array-like-properties)
   - [Channel](#channel)
     - [Channel([bufferLength = 0]) -> Channel](#channelbufferlength--0---channel)
@@ -71,11 +71,11 @@ switch (await Channel.select([
   charlie.push(`Hi!`)
 ])) {
   case alice:
-    console.log(`Alice said ${alice.value}.`);
+    console.log(`Alice said ${alice.value()}.`);
     break;
 
   case bob:
-    console.log(`Bob said ${bob.value}.`);
+    console.log(`Bob said ${bob.value()}.`);
     break;
 
   case charlie:
@@ -108,11 +108,11 @@ closed.close();
 
 switch (await Channel.select([alice.shift(), bob.shift(), closed.shift())]) {
   case alice:
-    console.log(`Alice said ${alice.value}.`);
+    console.log(`Alice said ${alice.value()}.`);
     break;
 
   case bob:
-    console.log(`Bob said ${bob.value}.`);
+    console.log(`Bob said ${bob.value()}.`);
     break;
 
   default:
@@ -128,11 +128,11 @@ setTimeout(timeout.close, 1000);
 
 switch (await Channel.select([alice.shift(), bob.shift(), timeout.shift())]) {
   case alice:
-    console.log(`Alice said ${alice.value}.`);
+    console.log(`Alice said ${alice.value()}.`);
     break;
 
   case bob:
-    console.log(`Bob said ${bob.value}.`);
+    console.log(`Bob said ${bob.value()}.`);
     break;
 
   default:
@@ -140,9 +140,9 @@ switch (await Channel.select([alice.shift(), bob.shift(), timeout.shift())]) {
 }
 ```
 
-## value
+## value()
 
-Set to the most recently `shift`ed value.  This is useful when used in
+Return the most recently `shift`ed value.  This is useful when used in
 combination with `select`.
 
 # Array-like Properties

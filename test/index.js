@@ -63,6 +63,8 @@ describe(`Channel`, function() {
   it(`isChannel`, function() {
     assert(Channel.isChannel(Channel.of(0, 1, 2)));
     assert(!Channel.isChannel(Array.of(0, 1, 2)));
+    assert(Channel.isChannel(Channel().readOnly()));
+    assert(Channel.isChannel(Channel().writeOnly()));
   });
 
   it(`of`, async function() {
@@ -80,7 +82,7 @@ describe(`Channel`, function() {
       })();
 
       assert.equal(await Channel.select([a.shift(), b.shift()]), b);
-      assert.equal(b.value, 0);
+      assert.equal(b.value(), 0);
       assert.equal(await a.shift(), 1);
       assert.equal(await Channel.select([a.push(0), b.shift()]), a);
     });
@@ -294,7 +296,7 @@ describe(`Channel object`, function() {
 
     assert.equal(readOnly.readOnly(), readOnly);
     assert.equal(await readOnly.shift(), 1);
-    assert.equal(readOnly.value, 1);
+    assert.equal(readOnly.value(), 1);
 
     assert.throws(() => {
       readOnly.frozen = false;
@@ -367,21 +369,13 @@ describe(`Channel object`, function() {
   });
 
   it(`value`, async function() {
-    const channel = Channel();
-    (async () => {
-      await channel.push(0);
-    })();
-
+    const channel = Channel(1);
+    await channel.push(null);
     await channel.shift();
-    assert.equal(channel.value, 0);
-
-    assert.throws(() => {
-      channel.value = 1;
-    });
-
+    assert.equal(channel.value(), null);
     channel.close();
     await channel.shift();
-    assert.equal(channel.value, undefined);
+    assert.equal(channel.value(), undefined);
   });
 
   it(`values`, async function() {
