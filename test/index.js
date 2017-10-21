@@ -36,14 +36,12 @@ describe(`Channel`, function() {
   });
 
   it(`creates a buffered channel`, async function() {
-    const channel = Channel(2);
-    (async () => {
-      assert.equal(await channel.shift(), 0);
-    })();
-
+    const channel = Channel(3);
     await channel.push(0);
     await channel.push(1);
     await channel.push(2);
+    await channel.close();
+    assert.deepEqual(await channel.values(), [0, 1, 2]);
   });
 
   describe(`from`, function() {
