@@ -55,6 +55,15 @@ describe(`Channel`, function() {
       assert.deepEqual(await Channel.from([0, 1, 2]).values(), [0, 1, 2]);
     });
 
+    it(`mapfn`, async function() {
+      assert.deepEqual(
+        await Channel.from([`a`, `b`, `c`], value =>
+          value.toUpperCase()
+        ).values(),
+        [`A`, `B`, `C`]
+      );
+    });
+
     it(`Node.js's stream.readOnly`, async function() {
       const readOnly = stream.PassThrough({ objectMode: true });
       readOnly.write(0);
