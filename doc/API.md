@@ -9,10 +9,11 @@
   - [value()](#value)
 - [Array-like Properties](#array-like-properties)
   - [Channel](#channel)
-    - [Channel([bufferLength = 0]) -> Channel](#channelbufferlength--0---channel)
+    - [Channel([bufferLength]) -> Channel](#channelbufferlength---channel)
     - [Channel.isChannel(value) -> Boolean](#channelischannelvalue---boolean)
-    - [Channel.of(...values) -> Channel](#channelofvalues---channel)
-    - [Channel.from(callback | iterable | stream.Readable[, mapfn [, thisArg]]) -> Channel](#channelfromcallback--iterable--streamreadable-mapfn--thisarg---channel)
+    - [Channel.of(...values) -> read-only Channel](#channelofvalues---read-only-channel)
+    - [Channel.from(callback | iterable | stream.Readable[, mapfn [, thisArg]]) -> read-only Channel](#channelfromcallback--iterable--streamreadable-mapfn--thisarg---read-only-channel)
+      - [Examples](#examples-1)
   - [Channel Object](#channel-object)
     - [every(callbackfn[, thisArg]) -> async Boolean](#everycallbackfn-thisarg---async-boolean)
     - [filter(callbackfn[, thisArg]) -> Channel](#filtercallbackfn-thisarg---channel)
@@ -160,11 +161,11 @@ to push up to `bufferLength` values before blocking.
 
 Return `true` if `value` is a channel, `false` otherwise.
 
-### Channel.of(...values) -> Channel
+### Channel.of(...values) -> read-only Channel
 
 Push `values` into a new channel and then close it.
 
-### Channel.from(callback | iterable | stream.Readable[, mapfn [, thisArg]]) -> Channel
+### Channel.from(callback | iterable | stream.Readable[, mapfn [, thisArg]]) -> read-only Channel
 
 Create a new `Channel` from a callback function, an iterable, or a [Node.js
 readable stream](https://nodejs.org/api/stream.html#stream_readable_streams).
@@ -175,6 +176,29 @@ pushing into the channel.  Close the channel when the function returns
 
 If the optional `mapfn` argument is provided, call it (using the also optional
 `thisArg`) on each value before pushing it into the channel.
+
+#### Examples
+
+```JavaScript
+const randomValues = Channel.from(Math.random);
+
+const fromArray = Channel.from([0, 1, 2]);
+
+const generator = function*() {
+  let counter = 0;
+
+  for (;;) {
+    yield counter;
+    counter++;
+  }
+};
+
+const fromGenerator = Channel.from(generator());
+
+const fromStream = Channel.from(
+  fs.createReadStream(`Communicating Sequential Processes.pdf`)
+);
+```
 
 ## Channel Object
 

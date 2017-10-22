@@ -45,17 +45,27 @@ describe(`Channel`, function() {
   });
 
   describe(`from`, function() {
-    it(`callback`, async function() {
-      let counter = 0;
-      const callback = () => (counter < 3 ? counter++ : undefined);
-      assert.deepEqual(await Channel.from(callback).values(), [0, 1, 2]);
+    describe(`types`, function() {
+      it(`callback`, async function() {
+        let counter = 0;
+        const callback = () => (counter < 3 ? counter++ : undefined);
+        assert.deepEqual(await Channel.from(callback).values(), [0, 1, 2]);
+      });
+
+      it(`iterable`, async function() {
+        assert.deepEqual(await Channel.from([0, 1, 2]).values(), [0, 1, 2]);
+      });
+
+      it(`Node.js's stream.Readable`, async function() {
+        const readable = stream.PassThrough({ objectMode: true });
+        readable.write(0);
+        readable.write(1);
+        readable.end(2);
+        assert.deepEqual(await Channel.from(readable).values(), [0, 1, 2]);
+      });
     });
 
-    it(`iterable`, async function() {
-      assert.deepEqual(await Channel.from([0, 1, 2]).values(), [0, 1, 2]);
-    });
-
-    it(`mapfn`, async function() {
+    it(`with mapfn`, async function() {
       assert.deepEqual(
         await Channel.from([`a`, `b`, `c`], value =>
           value.toUpperCase()
@@ -64,12 +74,8 @@ describe(`Channel`, function() {
       );
     });
 
-    it(`Node.js's stream.readOnly`, async function() {
-      const readOnly = stream.PassThrough({ objectMode: true });
-      readOnly.write(0);
-      readOnly.write(1);
-      readOnly.end(2);
-      assert.deepEqual(await Channel.from(readOnly).values(), [0, 1, 2]);
+    it(`returns a readOnly channel`, function() {
+      assert(!(`push` in Channel.from([0, 1, 2])));
     });
   });
 
@@ -81,7 +87,9 @@ describe(`Channel`, function() {
   });
 
   it(`of`, async function() {
-    assert.deepEqual(await Channel.of(0, 1, 2).values(), [0, 1, 2]);
+    const channel = Channel.of(0, 1, 2);
+    assert(!(`push` in channel));
+    assert.deepEqual(await channel.values(), [0, 1, 2]);
   });
 
   describe(`select`, function() {
