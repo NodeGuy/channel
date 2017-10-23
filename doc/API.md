@@ -152,7 +152,7 @@ These properties are similar to the equivalently named properties of `Array`.
 
 ## Channel
 
-### Channel([bufferLength = 0]) -> Channel
+### Channel([bufferLength]) -> Channel
 
 Create a new `Channel` with an optional buffer.  This allows an async function
 to push up to `bufferLength` values before blocking.

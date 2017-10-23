@@ -10,10 +10,10 @@ already know most of how to use a `Channel`.
 Go's use of channels for concurrency is amazing and with JavaScript's
 async/await feature we have the basis for it as well.  All that's missing is a
 solid `Channel` type.  There are existing libraries but I wanted an idiomatic
-`Channel` type that's more simple and minimally-opinionated.
+`Channel` type that's simple and minimally-opinionated.
 
 This document assumes you're familiar with Go's channels and why you'd want to
-use them.  For explanatory background, read my [blog
+use them.  For explanatory background, see my [blog
 article](https://www.nodeguy.com/channels-for-javascript/) on the subject.
 
 ## Requirements
