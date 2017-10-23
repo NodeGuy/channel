@@ -1,7 +1,7 @@
 {
   "name": "@nodeguy/channel",
   "description": "Go-like channels for JavaScript",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "author": {
     "name": "David Braun",
     "email": "David@NodeGuy.com",
@@ -18,7 +18,11 @@
     "prettier": "1.7.4"
   },
   "homepage": "https://github.com/NodeGuy/channel",
-  "keywords": ["CSP", "channel", "concurrency"],
+  "keywords": [
+    "CSP",
+    "channel",
+    "concurrency"
+  ],
   "license": "Apache-2.0",
   "main": "lib/index.js",
   "repository": {
