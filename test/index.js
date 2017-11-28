@@ -176,6 +176,8 @@ describe(`functional interface`, async function() {
     });
 
     it(`double argument application`, async function() {
+      assert.equal(await Channel.reduce(Math.max, 10, Channel.of(0, 1, 2)), 10);
+
       assert.deepEqual(
         await Channel.slice(1, 4)(Channel.of(0, 1, 2, 3, 4)).values(),
         [1, 2, 3]
