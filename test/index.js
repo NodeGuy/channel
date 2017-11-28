@@ -213,6 +213,15 @@ describe(`Channel object`, function() {
     });
   });
 
+  it(`concat`, async function() {
+    assert.deepEqual(
+      await Channel.of(0, 1, 2)
+        .concat(Channel.of(3, 4, 5), 6)
+        .values(),
+      [0, 1, 2, 3, 4, 5, 6]
+    );
+  });
+
   it(`every`, async function() {
     const even = number => number % 2 === 0;
     assert(!await Channel.of(0, 1, 2).every(even));

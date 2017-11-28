@@ -15,6 +15,7 @@
     - [Channel.from(callback | iterable | stream.Readable[, mapfn [, thisArg]]) -> read-only Channel](#channelfromcallback--iterable--streamreadable-mapfn--thisarg---read-only-channel)
       - [Examples](#examples-1)
   - [Channel Object](#channel-object)
+    - [concat(...arguments) -> Channel](#concatarguments---channel)
     - [every(callbackfn[, thisArg]) -> async Boolean](#everycallbackfn-thisarg---async-boolean)
     - [filter(callbackfn[, thisArg]) -> Channel](#filtercallbackfn-thisarg---channel)
     - [forEach(callbackfn[, thisArg]) -> async](#foreachcallbackfn-thisarg---async)
@@ -201,6 +202,12 @@ const fromStream = Channel.from(
 ```
 
 ## Channel Object
+
+### concat(...arguments) -> Channel
+
+When the `concat` method is called with zero or more arguments, it returns a
+channel containing the values of the channel followed by the channel values of
+each argument in order.
 
 ### every(callbackfn[, thisArg]) -> async Boolean
 
