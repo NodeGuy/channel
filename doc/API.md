@@ -22,7 +22,7 @@
     - [length](#length)
     - [map(callbackfn[, thisArg]) -> Channel](#mapcallbackfn-thisarg---channel)
     - [push(value) -> async bufferLength](#pushvalue---async-bufferlength)
-    - [reduce(callbackfn[, initialValue])](#reducecallbackfn-initialvalue)
+    - [reduce(callbackfn[, initialValue]) -> async](#reducecallbackfn-initialvalue---async)
     - [shift() -> async](#shift---async)
     - [slice(start[, end]) -> Channel](#slicestart-end---channel)
     - [some(callbackfn[, thisArg])](#somecallbackfn-thisarg)
@@ -294,7 +294,7 @@ promise.
 
 Unlike `Array`'s method, accept only one `value` at a time.
 
-### reduce(callbackfn[, initialValue])
+### reduce(callbackfn[, initialValue]) -> async
 
 `callbackfn` should be a function that takes two arguments (unlike `Array`'s
 version which takes four). `reduce` calls the callback, as a function, once for
