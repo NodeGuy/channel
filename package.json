@@ -12,17 +12,11 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@nodeguy/assert": "0.1.1",
-    "husky": "0.14.3",
-    "mocha": "3.5.3",
-    "prettier": "1.7.4"
+    "@nodeguy/assert": "0.1.4",
+    "mocha": "4.0.1"
   },
   "homepage": "https://github.com/NodeGuy/channel",
-  "keywords": [
-    "CSP",
-    "channel",
-    "concurrency"
-  ],
+  "keywords": ["CSP", "channel", "concurrency"],
   "license": "Apache-2.0",
   "main": "lib/index.js",
   "repository": {
@@ -30,7 +24,6 @@
     "url": "git+https://github.com/NodeGuy/channel.git"
   },
   "scripts": {
-    "precommit": "prettier --write lib/**/*.js test/**/*.js",
     "test": "mocha --recursive"
   }
 }
