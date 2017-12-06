@@ -136,6 +136,7 @@ describe(`Channel`, function() {
     const channel = Channel();
     Channel.select([channel.push(`cancelled`)]).cancel();
     const closed = Channel.of();
+
     assert.equal(
       await Channel.select([channel.shift(), closed.shift()]),
       closed
@@ -210,6 +211,18 @@ describe(`Channel object`, function() {
       const channel = Channel();
       channel.close();
       assert.strictEqual(await channel.shift(), undefined);
+    });
+
+    it(`Don't set 'lastValue' to 'undefined' when closing a channel with a cancelled shift.`, async function() {
+      const channel = Channel();
+
+      // Set lastValue to 0.
+      channel.push(0);
+      await channel.shift();
+
+      channel.shift().cancel();
+      channel.close();
+      assert.strictEqual(channel.value(), 0);
     });
   });
 
@@ -384,6 +397,15 @@ describe(`Channel object`, function() {
           .slice(1, 4)
           .values(),
         [1, 2, 3]
+      );
+    });
+
+    it(`start after end of channel`, async function() {
+      assert.deepEqual(
+        await Channel.of(0, 1, 2)
+          .slice(10)
+          .values(),
+        []
       );
     });
   });

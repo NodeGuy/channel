@@ -13,14 +13,11 @@
   "dependencies": {},
   "devDependencies": {
     "@nodeguy/assert": "0.1.4",
-    "mocha": "4.0.1"
+    "mocha": "4.0.1",
+    "nyc": "11.3.0"
   },
   "homepage": "https://github.com/NodeGuy/channel",
-  "keywords": [
-    "CSP",
-    "channel",
-    "concurrency"
-  ],
+  "keywords": ["CSP", "channel", "concurrency"],
   "license": "Apache-2.0",
   "main": "lib/index.js",
   "repository": {
@@ -28,6 +25,14 @@
     "url": "git+https://github.com/NodeGuy/channel.git"
   },
   "scripts": {
-    "test": "mocha --recursive"
+    "test": "nyc mocha --recursive"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "branches": 100,
+    "functions": 100,
+    "lines": 100,
+    "statements": 100,
+    "reporter": ["html", "text-summary"]
   }
 }
