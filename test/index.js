@@ -269,12 +269,14 @@ describe(`Channel object`, function() {
   });
 
   it(`map`, async function() {
-    assert.deepEqual(
-      await Channel.of(`a`, `b`, `c`)
-        .map(value => value.toUpperCase())
-        .values(),
-      [`A`, `B`, `C`]
-    );
+    const channel = Channel(3);
+    await channel.push(`a`);
+    await channel.push(`b`);
+    await channel.push(`c`);
+    await channel.close();
+    const mapped = channel.map(value => value.toUpperCase());
+    assert.equal(mapped.length, channel.length);
+    assert.deepEqual(await mapped.values(), [`A`, `B`, `C`]);
   });
 
   describe(`push`, function() {
