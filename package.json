@@ -10,7 +10,9 @@
   "bugs": {
     "url": "https://github.com/NodeGuy/channel/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "setimmediate": "1.0.5"
+  },
   "devDependencies": {
     "@nodeguy/assert": "0.1.4",
     "eslint": "4.12.1",
