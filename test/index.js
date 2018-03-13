@@ -314,12 +314,6 @@ describe(`Channel object`, function() {
         await channel.push(0, 1, 2);
       }, new Error(`Can't push more than one value at a time.`));
     });
-
-    it(`returns a frozen promise`, function() {
-      assert.throws(() => {
-        Channel().push(0).frozen = false;
-      });
-    });
   });
 
   it(`readOnly`, async function() {
@@ -374,12 +368,6 @@ describe(`Channel object`, function() {
       })();
 
       assert.equal(await channel.shift(), 0);
-    });
-
-    it(`returns a frozen promise`, function() {
-      assert.throws(() => {
-        Channel().shift().frozen = false;
-      });
     });
   });
 
