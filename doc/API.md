@@ -1,35 +1,35 @@
 <!-- TOC -->
 
-- [New Properties](#new-properties)
-  - [close() -> async](#close---async)
-  - [readOnly() -> Channel](#readonly---channel)
-  - [writeOnly() -> Channel](#writeonly---channel)
-  - [Channel.select(promises) -> async channel](#channelselectpromises---async-channel)
-    - [Examples](#examples)
-  - [value()](#value)
-- [Array-like Properties](#array-like-properties)
-  - [Channel](#channel)
-    - [Channel([bufferLength]) -> Channel](#channelbufferlength---channel)
-    - [Channel.isChannel(value) -> Boolean](#channelischannelvalue---boolean)
-    - [Channel.of(...values) -> read-only Channel](#channelofvalues---read-only-channel)
-    - [Channel.from(callback | iterable | stream.Readable[, mapfn [, thisArg]]) -> read-only Channel](#channelfromcallback--iterable--streamreadable-mapfn--thisarg---read-only-channel)
-      - [Examples](#examples-1)
-  - [Channel Object](#channel-object)
-    - [concat(...arguments) -> Channel](#concatarguments---channel)
-    - [every(callbackfn[, thisArg]) -> async Boolean](#everycallbackfn-thisarg---async-boolean)
-    - [filter(callbackfn[, thisArg]) -> Channel](#filtercallbackfn-thisarg---channel)
-    - [forEach(callbackfn[, thisArg]) -> async](#foreachcallbackfn-thisarg---async)
-    - [join(separator) -> async String](#joinseparator---async-string)
-    - [length](#length)
-    - [map(callbackfn[, thisArg]) -> Channel](#mapcallbackfn-thisarg---channel)
-    - [push(value) -> async bufferLength](#pushvalue---async-bufferlength)
-    - [reduce(callbackfn[, initialValue]) -> async](#reducecallbackfn-initialvalue---async)
-    - [shift() -> async](#shift---async)
-    - [slice(start[, end]) -> Channel](#slicestart-end---channel)
-    - [some(callbackfn[, thisArg])](#somecallbackfn-thisarg)
-    - [toString() -> String](#tostring---string)
-    - [values() -> async iterator](#values---async-iterator)
-- [Functional API](#functional-api)
+* [New Properties](#new-properties)
+  * [close() -> (async)](#close---async)
+  * [readOnly() -> Channel](#readonly---channel)
+  * [writeOnly() -> Channel](#writeonly---channel)
+  * [Channel.select(promises) -> (async) channel](#channelselectpromises---async-channel)
+    * [Examples](#examples)
+  * [value()](#value)
+* [Array-like Properties](#array-like-properties)
+  * [Channel](#channel)
+    * [Channel([bufferLength]) -> Channel](#channelbufferlength---channel)
+    * [Channel.isChannel(value) -> Boolean](#channelischannelvalue---boolean)
+    * [Channel.of(...values) -> read-only Channel](#channelofvalues---read-only-channel)
+    * [Channel.from(callback | iterable | stream.Readable[, mapfn [, thisArg]]) -> read-only Channel](#channelfromcallback--iterable--streamreadable-mapfn--thisarg---read-only-channel)
+      * [Examples](#examples-1)
+  * [Channel Object](#channel-object)
+    * [concat(...arguments) -> Channel](#concatarguments---channel)
+    * [every(callbackfn[, thisArg]) -> (async) Boolean](#everycallbackfn-thisarg---async-boolean)
+    * [filter(callbackfn[, thisArg]) -> Channel](#filtercallbackfn-thisarg---channel)
+    * [forEach(callbackfn[, thisArg]) -> (async)](#foreachcallbackfn-thisarg---async)
+    * [join(separator) -> (async) String](#joinseparator---async-string)
+    * [length](#length)
+    * [map(callbackfn[, thisArg]) -> Channel](#mapcallbackfn-thisarg---channel)
+    * [push(value) -> (async) bufferLength](#pushvalue---async-bufferlength)
+    * [reduce(callbackfn[, initialValue]) -> (async)](#reducecallbackfn-initialvalue---async)
+    * [shift() -> (async)](#shift---async)
+    * [slice(start[, end]) -> Channel](#slicestart-end---channel)
+    * [some(callbackfn[, thisArg])](#somecallbackfn-thisarg)
+    * [toString() -> String](#tostring---string)
+    * [values() -> (async) iterator](#values---async-iterator)
+* [Functional API](#functional-api)
 
 <!-- /TOC -->
 
@@ -37,9 +37,9 @@
 
 The following properties don't have equivalents in `Array`.
 
-## close() -> async
+## close() -> (async)
 
-Close the channel so that no more values can be pushed to it.  Return a promise
+Close the channel so that no more values can be pushed to it. Return a promise
 that resolves when any remaining pushes in flight complete.
 
 Attempting to push to a closed channel will throw an exception and shifting from
@@ -53,7 +53,7 @@ Return a version of the channel that provides only read methods.
 
 Return a version of the channel that provides only write methods.
 
-## Channel.select(promises) -> async channel
+## Channel.select(promises) -> (async) channel
 
 Wait for the first channel method promise to succeed and then cancel the rest.
 Return the channel of the winning promise.
@@ -86,7 +86,7 @@ switch (await Channel.select([
 }
 ```
 
-Be careful of unintended side effects, however.  Even though only one value is
+Be careful of unintended side effects, however. Even though only one value is
 pushed in the following example, the counter is incremented twice.
 
 ```JavaScript
@@ -101,7 +101,7 @@ await Channel.select([alice.push(increment()), bob.push(increment())]);
 assert.equal(counter, 2);
 ```
 
-Sometimes you don't want to wait until a method completes.  You can use a closed
+Sometimes you don't want to wait until a method completes. You can use a closed
 channel to return immediately even if no other channels are ready:
 
 ```JavaScript
@@ -144,7 +144,7 @@ switch (await Channel.select([alice.shift(), bob.shift(), timeout.shift())]) {
 
 ## value()
 
-Return the most recently `shift`ed value.  This is useful when used in
+Return the most recently `shift`ed value. This is useful when used in
 combination with `select`.
 
 # Array-like Properties
@@ -155,7 +155,7 @@ These properties are similar to the equivalently named properties of `Array`.
 
 ### Channel([bufferLength]) -> Channel
 
-Create a new `Channel` with an optional buffer.  This allows an async function
+Create a new `Channel` with an optional buffer. This allows an async function
 to push up to `bufferLength` values before blocking.
 
 ### Channel.isChannel(value) -> Boolean
@@ -172,7 +172,7 @@ Create a new `Channel` from a callback function, an iterable, or a [Node.js
 readable stream](https://nodejs.org/api/stream.html#stream_readable_streams).
 
 If given a callback function, call the function repeatedly to obtain values for
-pushing into the channel.  Close the channel when the function returns
+pushing into the channel. Close the channel when the function returns
 `undefined`.
 
 If the optional `mapfn` argument is provided, call it (using the also optional
@@ -209,10 +209,10 @@ When the `concat` method is called with zero or more arguments, it returns a
 channel containing the values of the channel followed by the channel values of
 each argument in order.
 
-### every(callbackfn[, thisArg]) -> async Boolean
+### every(callbackfn[, thisArg]) -> (async) Boolean
 
 `callbackfn` should be a function that accepts one argument and returns a value
-that is coercible to the Boolean values `true` or `false`.  `every` calls
+that is coercible to the Boolean values `true` or `false`. `every` calls
 `callbackfn` once for each value present in the channel until it finds one where
 `callbackfn` returns `false`. If such a value is found, every immediately
 returns `false`. Otherwise, if `callbackfn` returned `true` for all elements,
@@ -228,7 +228,7 @@ argument.
 ### filter(callbackfn[, thisArg]) -> Channel
 
 `callbackfn` should be a function that accepts an argument and returns a value
-that is coercible to the Boolean values `true` or `false`.  `filter` calls
+that is coercible to the Boolean values `true` or `false`. `filter` calls
 `callbackfn` once for each value in the channel and constructs a new channel of
 all the values for which `callbackfn` returns true.
 
@@ -239,7 +239,7 @@ instead.
 Unlike in the Array version of `filter`, `callbackfn` is called with only one
 argument.
 
-### forEach(callbackfn[, thisArg]) -> async
+### forEach(callbackfn[, thisArg]) -> (async)
 
 The promise returned by `forEach` resolves when the channel is closed:
 
@@ -265,7 +265,7 @@ const pipe = async (source, sink) => {
 };
 ```
 
-### join(separator) -> async String
+### join(separator) -> (async) String
 
 The values of the channel are converted to Strings, and these Strings are then
 concatenated, separated by occurrences of the separator. If no separator is
@@ -287,7 +287,7 @@ instead.
 
 Unlike `Array`'s method, `callbackfn` is called with only one argument.
 
-### push(value) -> async bufferLength
+### push(value) -> (async) bufferLength
 
 Send the value into the channel and return a promise that resolves when the
 value has been shifted or placed in the buffer.
@@ -301,7 +301,7 @@ promise.
 
 Unlike `Array`'s method, accept only one `value` at a time.
 
-### reduce(callbackfn[, initialValue]) -> async
+### reduce(callbackfn[, initialValue]) -> (async)
 
 `callbackfn` should be a function that takes two arguments (unlike `Array`'s
 version which takes four). `reduce` calls the callback, as a function, once for
@@ -317,7 +317,7 @@ to the first value in the channel. If no `initialValue` was provided, then
 `currentValue` will be equal to the second. It is a `TypeError` if the channel
 contains no values and `initialValue` is not provided.
 
-### shift() -> async
+### shift() -> (async)
 
 Return a promise that resolves when an value is received from the channel.
 Closed channels always return `undefined` immediately.
@@ -327,7 +327,7 @@ promise.
 
 ### slice(start[, end]) -> Channel
 
-Return a new channel generated by skipping `start` number of values.  If `end`
+Return a new channel generated by skipping `start` number of values. If `end`
 is provided then close the new channel after `end` - `start` values have been
 pushed.
 
@@ -354,15 +354,15 @@ empty channel, it returns `false`.
 
 Return `"Channel(n)"` where `n` is the length of the buffer.
 
-### values() -> async iterator
+### values() -> (async) iterator
 
 Return an iterator over the values in the channel.
 
 # Functional API
 
-There is a parallel API to support functional-style programming.  Every channel
+There is a parallel API to support functional-style programming. Every channel
 method is also available as an independent function in the `Channel` namespace
-that takes a channel as the final argument.  For example, `slice` can be called
+that takes a channel as the final argument. For example, `slice` can be called
 in either of the following two ways:
 
 ```JavaScript
