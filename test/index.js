@@ -18,7 +18,7 @@ const assertRejects = async (callback, reason) => {
   assert.fail(null, reason, `Missing expected rejection.`);
 };
 
-describe(`Channel`, function() {
+describe(`Channel function`, function() {
   it(`allows the use of new`, function() {
     return new Channel();
   });
