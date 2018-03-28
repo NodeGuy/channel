@@ -453,3 +453,25 @@ describe(`Channel object`, function() {
     });
   });
 });
+
+it(`allows promises to be sent through a channel`, function() {
+  return new Promise(async (resolve, reject) => {
+    process.once(`unhandledRejection`, reject);
+
+    const channel = Channel.of(
+      Promise.resolve(`resolved`),
+      new Promise((resolve, reject) => {
+        setImmediate(reject, new Error(`rejected`));
+      })
+    );
+
+    assert.equal(await channel.shift(), `resolved`);
+
+    try {
+      await channel.shift();
+    } catch (exception) {
+      assert.equal(exception.message, `rejected`);
+      resolve();
+    }
+  });
+});
