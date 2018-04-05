@@ -113,11 +113,9 @@ describe(`Channel function`, function() {
     const a = Channel();
     const b = Channel();
 
-    switch (await Channel.select([
-      a.shift(),
-      b.push(0),
-      Channel.of().shift()
-    ])) {
+    switch (
+      await Channel.select([a.shift(), b.push(0), Channel.of().shift()])
+    ) {
       case a:
         assert(false);
         break;
@@ -237,7 +235,7 @@ describe(`Channel object`, function() {
 
   it(`every`, async function() {
     const even = number => number % 2 === 0;
-    assert(!await Channel.of(0, 1, 2).every(even));
+    assert(!(await Channel.of(0, 1, 2).every(even)));
     assert(await Channel.of(0, 2, 4).every(even));
   });
 
@@ -251,13 +249,9 @@ describe(`Channel object`, function() {
   });
 
   it(`forEach`, async function() {
-    const output = Channel();
-    (async () => {
-      await Channel.of(0, 1, 2).forEach(output.push);
-      output.close();
-    })();
-
-    assert.deepEqual(await output.values(), [0, 1, 2]);
+    const output = [];
+    await Channel.of(0, 1, 2).forEach(value => output.push(value));
+    assert.deepEqual(output, [0, 1, 2]);
   });
 
   it(`join`, async function() {
@@ -331,6 +325,7 @@ describe(`Channel object`, function() {
     assert.throws(() => {
       readOnly.writeOnly();
     });
+
     (async () => {
       await channel.push(1);
     })();
@@ -405,7 +400,7 @@ describe(`Channel object`, function() {
     const channel = Channel.of(0, 1, 2);
     assert(await channel.some(even));
     assert.deepEqual(await channel.values(), [1, 2]);
-    assert(!await Channel.of(1, 3, 5).some(even));
+    assert(!(await Channel.of(1, 3, 5).some(even)));
   });
 
   it(`toString`, function() {
@@ -440,6 +435,7 @@ describe(`Channel object`, function() {
       });
 
       assert.equal(writeOnly.value, undefined);
+
       (async () => {
         await channel.shift();
       })();
