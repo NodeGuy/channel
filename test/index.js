@@ -82,6 +82,8 @@ describe(`Channel function`, function() {
   it(`isChannel`, function() {
     assert(Channel.isChannel(Channel.of(0, 1, 2)));
     assert(!Channel.isChannel(Array.of(0, 1, 2)));
+    assert(!Channel.isChannel(undefined));
+    assert(!Channel.isChannel(null));
     assert(Channel.isChannel(Channel().readOnly()));
     assert(Channel.isChannel(Channel().writeOnly()));
   });
