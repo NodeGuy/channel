@@ -98,6 +98,7 @@ describe(`Channel function`, function() {
     it(`miscellaneous`, async function() {
       const a = Channel();
       const b = Channel();
+
       (async () => {
         await b.push(0);
         await a.push(1);
@@ -114,10 +115,9 @@ describe(`Channel function`, function() {
   it(`allows for non-blocking selects`, async function() {
     const a = Channel();
     const b = Channel();
+    const closed = Channel.of();
 
-    switch (
-      await Channel.select([a.shift(), b.push(0), Channel.of().shift()])
-    ) {
+    switch (await Channel.select([a.shift(), b.push(0), closed.shift()])) {
       case a:
         assert(false);
         break;
