@@ -1,11 +1,11 @@
 module.exports = function(config) {
   config.set({
-    testRunner: "mocha",
     mutator: "javascript",
+    packageManager: "yarn",
+    reporters: ["clear-text", "progress"],
+    testRunner: "mocha",
     transpilers: [],
-    reporter: ["clear-text", "progress"],
     testFramework: "mocha",
-    coverageAnalysis: "perTest",
-    mutate: ["lib/**/*.js"]
+    coverageAnalysis: "perTest"
   });
 };
