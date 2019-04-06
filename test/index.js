@@ -271,7 +271,6 @@ describe(`Channel object`, function() {
     await channel.push(`c`);
     await channel.close();
     const mapped = channel.map(value => value.toUpperCase());
-    assert.equal(mapped.length, channel.length);
     assert.deepEqual(await mapped.values(), [`A`, `B`, `C`]);
   });
 
