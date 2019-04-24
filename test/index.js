@@ -399,6 +399,15 @@ describe(`Channel object`, function() {
   });
 
   describe(`slice`, function() {
+    it(`no start`, async function() {
+      assert.deepEqual(
+        await Channel.of(0, 1, 2)
+          .slice()
+          .values(),
+        [0, 1, 2]
+      );
+    });
+
     it(`start`, async function() {
       assert.deepEqual(
         await Channel.of(0, 1, 2)
@@ -417,7 +426,7 @@ describe(`Channel object`, function() {
       );
     });
 
-    it(`start after end of channel`, async function() {
+    it(`starts after end of channel`, async function() {
       assert.deepEqual(
         await Channel.of(0, 1, 2)
           .slice(10)
