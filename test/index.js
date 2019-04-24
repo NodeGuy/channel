@@ -1,8 +1,8 @@
 "use strict";
 
-const assert = require("@nodeguy/assert");
-const Channel = require("../lib");
-const stream = require("stream");
+const assert = require(`@nodeguy/assert`);
+const Channel = require(`../lib`);
+const stream = require(`stream`);
 
 const assertRejects = async (callback, reason) => {
   try {
@@ -247,6 +247,37 @@ describe(`Channel object`, function() {
         .filter(async value => value % 2 !== 0)
         .values(),
       [1, 3, 5]
+    );
+  });
+
+  it(`flat`, async function() {
+    const flat1 = Channel.of(1, 2, Channel.of(3, 4)).flat();
+    assert.deepEqual(await flat1.values(), [1, 2, 3, 4]);
+
+    const flat2 = Channel.of(1, 2, Channel.of(3, 4, Channel.of(5, 6))).flat();
+    assert.equal(await flat2.shift(), 1);
+    assert.equal(await flat2.shift(), 2);
+    assert.equal(await flat2.shift(), 3);
+    assert.equal(await flat2.shift(), 4);
+    assert.deepEqual(await (await flat2.shift()).values(), [5, 6]);
+
+    const flat3 = Channel.of(1, 2, Channel.of(3, 4, Channel.of(5, 6))).flat(2);
+    assert.deepEqual(await flat3.values(), [1, 2, 3, 4, 5, 6]);
+  });
+
+  it(`flatMap`, async function() {
+    assert.deepEqual(
+      await Channel.of(1, 2, 3, 4)
+        .flatMap(x => Channel.of(x * 2))
+        .values(),
+      [2, 4, 6, 8]
+    );
+
+    assert.deepEqual(
+      await Channel.of(`it's Sunny in`, ``, `California`)
+        .flatMap(x => Channel.from(x.split(` `)))
+        .values(),
+      [`it's`, `Sunny`, `in`, ``, `California`]
     );
   });
 

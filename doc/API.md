@@ -1,35 +1,37 @@
 <!-- TOC -->
 
-* [New Properties](#new-properties)
-  * [close() -> (async)](#close---async)
-  * [readOnly() -> Channel](#readonly---channel)
-  * [writeOnly() -> Channel](#writeonly---channel)
-  * [Channel.select(promises) -> (async) channel](#channelselectpromises---async-channel)
-    * [Examples](#examples)
-  * [value()](#value)
-* [Array-like Properties](#array-like-properties)
-  * [Channel](#channel)
-    * [Channel([bufferLength]) -> Channel](#channelbufferlength---channel)
-    * [Channel.isChannel(value) -> Boolean](#channelischannelvalue---boolean)
-    * [Channel.of(...values) -> read-only Channel](#channelofvalues---read-only-channel)
-    * [Channel.from(callback | iterable | stream.Readable[, mapfn [, thisArg]]) -> read-only Channel](#channelfromcallback--iterable--streamreadable-mapfn--thisarg---read-only-channel)
-      * [Examples](#examples-1)
-  * [Channel Object](#channel-object)
-    * [concat(...arguments) -> Channel](#concatarguments---channel)
-    * [every(callbackfn[, thisArg]) -> (async) Boolean](#everycallbackfn-thisarg---async-boolean)
-    * [filter(callbackfn[, thisArg]) -> Channel](#filtercallbackfn-thisarg---channel)
-    * [forEach(callbackfn[, thisArg]) -> (async)](#foreachcallbackfn-thisarg---async)
-    * [join(separator) -> (async) String](#joinseparator---async-string)
-    * [length](#length)
-    * [map(callbackfn[, thisArg]) -> Channel](#mapcallbackfn-thisarg---channel)
-    * [push(value) -> (async) bufferLength](#pushvalue---async-bufferlength)
-    * [reduce(callbackfn[, initialValue]) -> (async)](#reducecallbackfn-initialvalue---async)
-    * [shift() -> (async)](#shift---async)
-    * [slice(start[, end]) -> Channel](#slicestart-end---channel)
-    * [some(callbackfn[, thisArg])](#somecallbackfn-thisarg)
-    * [toString() -> String](#tostring---string)
-    * [values() -> (async) iterator](#values---async-iterator)
-* [Functional API](#functional-api)
+- [New Properties](#new-properties)
+  - [close() -> (async)](#close-async)
+  - [readOnly() -> Channel](#readonly-channel)
+  - [writeOnly() -> Channel](#writeonly-channel)
+  - [Channel.select(promises) -> (async) channel](#channelselectpromises-async-channel)
+    - [Examples](#examples)
+  - [value()](#value)
+- [Array-like Properties](#array-like-properties)
+  - [Channel](#channel)
+    - [Channel([bufferLength]) -> Channel](#channelbufferlength-channel)
+    - [Channel.isChannel(value) -> Boolean](#channelischannelvalue-boolean)
+    - [Channel.of(...values) -> read-only Channel](#channelofvalues-read-only-channel)
+    - [Channel.from(callback | iterable | stream.Readable[, mapfn [, thisArg]]) -> read-only Channel](#channelfromcallback-iterable-streamreadable-mapfn-thisarg-read-only-channel)
+      - [Examples](#examples-1)
+  - [Channel Object](#channel-object)
+    - [concat(...arguments) -> Channel](#concatarguments-channel)
+    - [every(callbackfn[, thisArg]) -> (async) Boolean](#everycallbackfn-thisarg-async-boolean)
+    - [filter(callbackfn[, thisArg]) -> Channel](#filtercallbackfn-thisarg-channel)
+    - [flat([depth = 1]) -> Channel](#flatdepth-1-channel)
+    - [flatMap (mapperFunction[, thisArg]) -> Channel](#flatmap-mapperfunction-thisarg-channel)
+    - [forEach(callbackfn[, thisArg]) -> (async)](#foreachcallbackfn-thisarg-async)
+    - [join(separator) -> (async) String](#joinseparator-async-string)
+    - [length](#length)
+    - [map(mapperFunction[, thisArg]) -> Channel](#mapmapperfunction-thisarg-channel)
+    - [push(value) -> (async) bufferLength](#pushvalue-async-bufferlength)
+    - [reduce(callbackfn[, initialValue]) -> (async)](#reducecallbackfn-initialvalue-async)
+    - [shift() -> (async)](#shift-async)
+    - [slice(start[, end]) -> Channel](#slicestart-end-channel)
+    - [some(callbackfn[, thisArg])](#somecallbackfn-thisarg)
+    - [toString() -> String](#tostring-string)
+    - [values() -> (async) iterator](#values-async-iterator)
+- [Functional API](#functional-api)
 
 <!-- /TOC -->
 
@@ -239,6 +241,23 @@ instead.
 Unlike in the Array version of `filter`, `callbackfn` is called with only one
 argument.
 
+### flat([depth = 1]) -> Channel
+
+Create a new channel with values from the existing channel. If any of the
+values are themselves channels, flatten them by pushing their values into the
+new channel instead (while repeating this behavior up to `depth` times).
+
+### flatMap (mapperFunction[, thisArg]) -> Channel
+
+Call `mapperFunction` once for each value in the channel and flatten the result
+(with depth 1).
+
+If `thisArg` is provided it will be used as the `this` value for each invocation
+of `mapperFunction`. If it is not provided, `undefined` is used instead.
+
+Unlike in `Array`'s `flatMap` method, `mapperFunction` is called with only one
+argument.
+
 ### forEach(callbackfn[, thisArg]) -> (async)
 
 The promise returned by `forEach` resolves when the channel is closed:
@@ -275,25 +294,24 @@ provided, a single comma is used as the separator.
 
 The length of the channel's buffer.
 
-### map(callbackfn[, thisArg]) -> Channel
+### map(mapperFunction[, thisArg]) -> Channel
 
-`callbackfn` should be a function that accepts one argument. `map` calls
-`callbackfn` once for each value in the channel and constructs a new Channel
-from the results.
+Call `mapperFunction` once for each value in the channel and construct a new
+channel with the results.
 
-If a `thisArg` parameter is provided, it will be used as the `this` value for
-each invocation of `callbackfn`. If it is not provided, `undefined` is used
-instead.
+If `thisArg` is provided it will be used as the `this` value for each invocation
+of `mapperFunction`. If it is not provided, `undefined` is used instead.
 
-Unlike `Array`'s method, `callbackfn` is called with only one argument.
+Unlike in `Array`'s `map` method, `mapperFunction` is called with only one
+argument.
 
 ### push(value) -> (async) bufferLength
 
 Send the value into the channel and return a promise that resolves when the
 value has been shifted or placed in the buffer.
 
-* Throw a `TypeError` when attempting to push to a closed channel.
-* Throw a `TypeError` when attempting to push `undefined` because it's a
+- Throw a `TypeError` when attempting to push to a closed channel.
+- Throw a `TypeError` when attempting to push `undefined` because it's a
   reserved value used to indicate a closed channel.
 
 The push can be cancelled before completion by calling `cancel` on the returned
