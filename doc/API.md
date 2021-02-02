@@ -4,6 +4,7 @@
   - [close() -> (async)](#close-async)
   - [readOnly() -> Channel](#readonly-channel)
   - [writeOnly() -> Channel](#writeonly-channel)
+  - [Channel.all(channels) -> Channel](#channelallchannels-channel)
   - [Channel.select(promises) -> (async) channel](#channelselectpromises-async-channel)
     - [Examples](#examples)
   - [value()](#value)
@@ -44,7 +45,7 @@ The following properties don't have equivalents in `Array`.
 Close the channel so that no more values can be pushed to it. Return a promise
 that resolves when any remaining pushes in flight complete.
 
-Attempting to push to a closed channel will throw an exception and shifting from
+Attempting to push to a closed channel will throw an exception. Shifting from
 a closed channel will immediately return `undefined`.
 
 ## readOnly() -> Channel
@@ -54,6 +55,11 @@ Return a version of the channel that provides only read methods.
 ## writeOnly() -> Channel
 
 Return a version of the channel that provides only write methods.
+
+## Channel.all(channels) -> Channel
+
+Take an array of channels and wait for the next value in each one before pushing
+an array of the values to a newly created channel. Similar to `Promise.all`.
 
 ## Channel.select(promises) -> (async) channel
 

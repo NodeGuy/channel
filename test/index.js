@@ -44,6 +44,12 @@ describe(`Channel function`, function() {
     assert.deepEqual(await channel.values(), [0, 1, 2]);
   });
 
+  it(`all`, async function() {
+    const a = Channel.of(0, 1);
+    const b = Channel.of(2, 3);
+    assert.deepEqual(await Channel.all([a, b]).values(), [[0, 2], [1, 3]]);
+  });
+
   describe(`from`, function() {
     describe(`types`, function() {
       it(`callback`, async function() {
