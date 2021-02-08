@@ -10,9 +10,7 @@
   "bugs": {
     "url": "https://gitlab.com/NodeGuy/channel/issues"
   },
-  "dependencies": {
-    "setimmediate": "1.0.5"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@nodeguy/assert": "0.1.4",
     "@stryker-mutator/core": "1.1.0",
