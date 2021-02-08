@@ -250,7 +250,7 @@ describe(`Channel object`, function() {
   it(`filter`, async function() {
     assert.deepEqual(
       await Channel.of(0, 1, 2, 3, 4, 5)
-        .filter(async (value) => value % 2 !== 0)
+        .filter((value) => value % 2 !== 0)
         .values(),
       [1, 3, 5]
     );
