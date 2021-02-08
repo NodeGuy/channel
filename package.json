@@ -34,6 +34,7 @@
     "url": "git+https://gitlab.com/NodeGuy/channel.git"
   },
   "scripts": {
+    "mutationTest": "stryker run",
     "test": "nyc mocha --recursive"
   },
   "nyc": {
