@@ -73,7 +73,7 @@ describe(`Channel function`, function() {
 
     it(`with mapfn`, async function() {
       assert.deepEqual(
-        await Channel.from([`a`, `b`, `c`], value =>
+        await Channel.from([`a`, `b`, `c`], (value) =>
           value.toUpperCase()
         ).values(),
         [`A`, `B`, `C`]
@@ -242,7 +242,7 @@ describe(`Channel object`, function() {
   });
 
   it(`every`, async function() {
-    const even = number => number % 2 === 0;
+    const even = (number) => number % 2 === 0;
     assert(!(await Channel.of(0, 1, 2).every(even)));
     assert(await Channel.of(0, 2, 4).every(even));
   });
@@ -250,7 +250,7 @@ describe(`Channel object`, function() {
   it(`filter`, async function() {
     assert.deepEqual(
       await Channel.of(0, 1, 2, 3, 4, 5)
-        .filter(async value => value % 2 !== 0)
+        .filter(async (value) => value % 2 !== 0)
         .values(),
       [1, 3, 5]
     );
@@ -274,14 +274,14 @@ describe(`Channel object`, function() {
   it(`flatMap`, async function() {
     assert.deepEqual(
       await Channel.of(1, 2, 3, 4)
-        .flatMap(x => Channel.of(x * 2))
+        .flatMap((x) => Channel.of(x * 2))
         .values(),
       [2, 4, 6, 8]
     );
 
     assert.deepEqual(
       await Channel.of(`it's Sunny in`, ``, `California`)
-        .flatMap(x => Channel.from(x.split(` `)))
+        .flatMap((x) => Channel.from(x.split(` `)))
         .values(),
       [`it's`, `Sunny`, `in`, ``, `California`]
     );
@@ -289,7 +289,7 @@ describe(`Channel object`, function() {
 
   it(`forEach`, async function() {
     const output = [];
-    await Channel.of(0, 1, 2).forEach(value => output.push(value));
+    await Channel.of(0, 1, 2).forEach((value) => output.push(value));
     assert.deepEqual(output, [0, 1, 2]);
   });
 
@@ -307,7 +307,7 @@ describe(`Channel object`, function() {
     await channel.push(`b`);
     await channel.push(`c`);
     await channel.close();
-    const mapped = channel.map(value => value.toUpperCase());
+    const mapped = channel.map((value) => value.toUpperCase());
     assert.deepEqual(await mapped.values(), [`A`, `B`, `C`]);
   });
 
@@ -443,7 +443,7 @@ describe(`Channel object`, function() {
   });
 
   it(`some`, async function() {
-    const even = value => value % 2 === 0;
+    const even = (value) => value % 2 === 0;
     const channel = Channel.of(0, 1, 2);
     assert(await channel.some(even));
     assert.deepEqual(await channel.values(), [1, 2]);
