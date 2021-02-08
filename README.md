@@ -46,8 +46,7 @@ const receive = async () => {
   assert.equal(await channel.shift(), undefined);
 };
 
-send();
-receive();
+await Promise.all([send(), receive()]);
 ```
 
 The `push` and `shift` methods are usually called in different async functions.
@@ -56,7 +55,7 @@ behavior of the async functions.
 
 # API
 
-The [API](doc/API.md) is in the `doc` directory.
+The API is in the [API.md](API.md) file.
 
 # Similar Projects
 
