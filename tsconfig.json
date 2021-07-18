@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "lib": ["ES2015"]
+  },
+  "include": [
+    "lib"
+  ]
+}

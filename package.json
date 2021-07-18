@@ -10,7 +10,10 @@
   "bugs": {
     "url": "https://gitlab.com/NodeGuy/channel/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "ts-mocha": "^8.0.0",
+    "typescript": "^4.3.5"
+  },
   "devDependencies": {
     "@nodeguy/assert": "0.1.4",
     "@stryker-mutator/core": "4.4.1",
@@ -35,7 +38,7 @@
   },
   "scripts": {
     "mutationTest": "stryker run",
-    "test": "nyc mocha --recursive"
+    "test": "nyc ts-mocha --recursive"
   },
   "nyc": {
     "check-coverage": true,
