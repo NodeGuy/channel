@@ -10,10 +10,7 @@
   "bugs": {
     "url": "https://gitlab.com/NodeGuy/channel/issues"
   },
-  "dependencies": {
-    "ts-mocha": "^8.0.0",
-    "typescript": "^4.3.5"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@nodeguy/assert": "0.1.4",
     "@stryker-mutator/core": "4.4.1",
@@ -21,6 +18,8 @@
     "@stryker-mutator/mocha-framework": "4.0.0",
     "@stryker-mutator/mocha-runner": "4.4.1",
     "eslint": "7.19.0",
+    "ts-mocha": "^8.0.0",
+    "typescript": "^4.3.5",
     "mocha": "8.2.1",
     "nyc": "15.1.0"
   },
