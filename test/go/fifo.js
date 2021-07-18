@@ -6,7 +6,7 @@
 
 "use strict";
 
-const Channel = require("../../lib");
+const Channel = require(`../../lib`);
 
 it(`fifo`, function() {
   const N = 10;

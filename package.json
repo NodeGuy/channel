@@ -18,6 +18,8 @@
     "@stryker-mutator/mocha-framework": "4.0.0",
     "@stryker-mutator/mocha-runner": "4.4.1",
     "eslint": "7.19.0",
+    "ts-mocha": "^8.0.0",
+    "typescript": "^4.3.5",
     "mocha": "8.2.1",
     "nyc": "15.1.0"
   },
@@ -35,7 +37,7 @@
   },
   "scripts": {
     "mutationTest": "stryker run",
-    "test": "nyc mocha --recursive"
+    "test": "nyc ts-mocha --recursive"
   },
   "nyc": {
     "check-coverage": true,

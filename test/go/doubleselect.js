@@ -7,7 +7,7 @@
 
 "use strict";
 
-const Channel = require("../../lib");
+const Channel = require(`../../lib`);
 
 it(`doubleselect`, async function() {
   this.timeout(10 * 1000);

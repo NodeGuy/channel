@@ -10,7 +10,7 @@
 "use strict";
 
 const assert = require(`@nodeguy/assert`);
-const Channel = require("../../lib");
+const Channel = require(`../../lib`);
 
 it(`perm`, function() {
   const c = Channel();

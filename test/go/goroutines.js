@@ -7,7 +7,7 @@
 
 "use strict";
 
-const Channel = require("../../lib");
+const Channel = require(`../../lib`);
 
 it(`goroutines`, async function() {
   const f = async (left, right) => {
