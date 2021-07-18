@@ -13,7 +13,7 @@ interface CancelablePromise<T> extends Promise<T> {
 
 interface OrderPromise<C, T> extends CancelablePromise<T> {
   channel: C;
-  prethen(onFulfilled: (value: C) => void): void;
+  prethen(onFulfilled: (value: T) => void): void;
 }
 type UnwrapOrderPromise<A> = A extends OrderPromise<any, infer T> ? T : never 
 
@@ -44,7 +44,6 @@ export interface WriteChannel<T> {
 }
 
 export type ReadWriteChannel<T> = ReadChannel<T> & WriteChannel<T>;
-
 
 import { Functionalify, Typify } from './functional';
 // Ideally these would not be channels of `any`, but I couldn't find a way to pass on the generic arguments
