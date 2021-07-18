@@ -50,7 +50,7 @@ import { Functionalify, Typify } from './functional';
 type FunctionalInterface =
   Functionalify<Typify<ReadChannel<any>>, ReadChannel<any>> & Functionalify<Typify<WriteChannel<any>>, WriteChannel<any>>
 
-export type ChannelConstructor = {
+type ChannelConstructor = {
   <T>(length?: number): ReadWriteChannel<T>;
   new <T>(length?: number): ReadWriteChannel<T>;
   all<T>(...values: T[]): ReadWriteChannel<T>;
