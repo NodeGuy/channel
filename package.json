@@ -8,7 +8,7 @@
     "url": "https://www.NodeGuy.com/"
   },
   "bugs": {
-    "url": "https://gitlab.com/NodeGuy/channel/issues"
+    "url": "https://github.com/NodeGuy/channel/issues"
   },
   "dependencies": {},
   "devDependencies": {
@@ -23,7 +23,7 @@
     "mocha": "8.2.1",
     "nyc": "15.1.0"
   },
-  "homepage": "https://gitlab.com/NodeGuy/channel",
+  "homepage": "https://github.com/NodeGuy/channel",
   "keywords": [
     "CSP",
     "channel",
@@ -33,7 +33,7 @@
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/NodeGuy/channel.git"
+    "url": "git+https://github.com/NodeGuy/channel.git"
   },
   "scripts": {
     "mutationTest": "stryker run",
