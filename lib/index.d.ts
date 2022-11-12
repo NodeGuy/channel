@@ -63,4 +63,4 @@ type ChannelConstructor = {
 
 declare const Channel: ChannelConstructor;
 
-export = Channel;
+export default Channel;
